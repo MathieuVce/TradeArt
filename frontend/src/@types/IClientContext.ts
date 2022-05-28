@@ -1,7 +1,7 @@
-import { IAuth, IClient, IPassword, IRegister, IUser } from "./IClient";
+import { IAuth, IClient, IPassword, IRegister } from "./IClient";
 
 export interface IClientContext {
-  client?: null | IClient | IUser;
+  client?: null | IClient;
 
   login: TLoginFC;
   logout: TLogoutFC;

@@ -1,8 +1,9 @@
 import { CustomStepper } from "../Stepper";
+import { IUser } from "../../@types/IUser";
 import { useEffect, useState } from "react";
 import { Grid, IconButton } from "@mui/material";
 import { useOutletContext } from "react-router-dom";
-import { IAuth, IClient, IUser, TUser } from "../../@types/IClient";
+import { IAuth, IClient, TUser } from "../../@types/IClient";
 import {  ArrowLeftSharp, ArrowRightSharp } from "@material-ui/icons";
 
 interface IRegisterStepperProps {

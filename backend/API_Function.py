@@ -96,7 +96,7 @@ async def customer_log_in(payload: Request):
 
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
 
-    passverif=dbase.execute('''SELECT password from artist WHERE email = "{email}" '''.format(email= str(values_dict['email']).lower())).fetchall()
+    passverif=dbase.execute('''SELECT password from customer WHERE email = "{email}" '''.format(email= str(values_dict['email']).lower())).fetchall()
 
     message = 'Email ou mot de passe incorrect'
     status = 'error'
@@ -140,6 +140,43 @@ async def customer_log_out(payload: Request):
 
     dbase.close()    
     return {'message':message , 'status': status }
+
+
+@app.put('/password_artist')
+async def password_artist(payload: Request):
+    values_dict = await payload.json()
+
+    dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
+
+    artist = dbase.execute('''SELECT * FROM artist WHERE email = "{email}"'''.format(email=str(values_dict["email"]).lower())).fetchall()
+
+    if len(artist)==0:
+        message = 'Email non existant'
+        status = 'warning'
+    else: 
+        dbase.execute('''UPDATE artist SET password ="{password}" WHERE email = "{email}"'''.format(password=str(values_dict['password']), email =str(values_dict['email']).lower()))
+        message = 'Mot de passe réinitialisé'
+        status ='success'
+    dbase.close()
+    return{'message':message, 'status':status}
+
+@app.put('/password_customer')
+async def password_customer(payload: Request):
+    values_dict = await payload.json()
+
+    dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
+
+    customer = dbase.execute('''SELECT * FROM customer WHERE email = "{email}"'''.format(email=str(values_dict["email"]).lower())).fetchall()
+
+    if len(customer)==0:
+        message = 'Email non existant'
+        status = 'warning'
+    else: 
+        dbase.execute('''UPDATE customer SET password ="{password}" WHERE email = "{email}"'''.format(password=str(values_dict['password']), email =str(values_dict['email']).lower()))
+        message = 'Mot de passe réinitialisé'
+        status ='success'
+    dbase.close()
+    return{'message':message, 'status':status}
 
 #####################
 

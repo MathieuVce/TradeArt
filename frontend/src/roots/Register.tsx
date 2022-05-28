@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { EAuth } from '../@types/EAuth';
+import { IUser } from '../@types/IUser';
 import { Auth } from '../components/Auth';
 import { useOutletContext } from 'react-router';
-import { IAuth, IClient, IUser, TUser } from '../@types/IClient';
+import { IAuth, IClient, TUser } from '../@types/IClient';
 import { RegisterStepper } from '../components/Register/RegisterStep';
 import { UserSecondStep } from '../components/Register/User/SecondStep';
 import { ArtistFirstStep } from '../components/Register/Artist/FirstStep';

@@ -1,11 +1,11 @@
 import { createContext, useState } from "react";
-import { IAuth, IClient, IPassword, IRegister, IUser } from "../@types/IClient";
+import { IAuth, IClient, IPassword, IRegister } from "../@types/IClient";
 import { defaultClientValue, IClientContext, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC } from "../@types/IClientContext";
 
 export const ClientContext = createContext<IClientContext>(defaultClientValue);
 
 export const ClientProvider: React.FC<any> = ({ children }) => {
-  const [user, setUser] = useState<null | IClient | IUser>(null);
+  const [user, setUser] = useState<null | IClient>(null);
 
   const ip = 'http://localhost:8000/'
   
@@ -33,49 +33,30 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
 
   const login: TLoginFC = async (payload: IAuth) => {
     try {
-      const response = await putData(payload.user ? 'customer_log_in' : 'artist_log_in', payload);
+      const response = await putData('artist_log_in', payload);
       const data = await response.json();
       console.log(data.data);
       if (data.status === 'success') {
-        if (payload.user) {
-          const address = {
-            address: data.data[4].split(',')[0],
-            postalcode: data.data[4].split(',')[1],
-            city: data.data[4].split(',')[2]
-          };
-          setUser({
-            user: true,
-            id: data.data[0],
-            firstname: data.data[1],
-            lastname: data.data[2],
-            address,
-            birthdate: new Date(data.data[5]),
-            credit_card_number: data.data[6],
-            email: data.data[7],
-            phonenumber: data.data[8],
-          });
-        } else {
-          const address = {
-            address: data.data[5].split(',')[0],
-            postalcode: data.data[5].split(',')[1],
-            city: data.data[5].split(',')[2]
-          };
-          setUser({
-            user: false,
-            id: data.data[0],
-            firstname: data.data[1],
-            lastname: data.data[2],
-            birthdate: new Date(data.data[3]),
-            bank_account_number: data.data[4],
-            address,
-            email: data.data[6],
-            phonenumber: data.data[7],
-            institution: data.data[8],
-            cursus: data.data[9],
-            description: data.data[10],
-            photo: data.data[11]
-          });
-        }
+        const address = {
+          address: data.data[5].split(',')[0],
+          postalcode: data.data[5].split(',')[1],
+          city: data.data[5].split(',')[2]
+        };
+        setUser({
+          user: false,
+          id: data.data[0],
+          firstname: data.data[1],
+          lastname: data.data[2],
+          birthdate: new Date(data.data[3]),
+          bank_account_number: data.data[4],
+          address,
+          email: data.data[6],
+          phonenumber: data.data[7],
+          institution: data.data[8],
+          cursus: data.data[9],
+          description: data.data[10],
+          photo: data.data[11]
+        });
       }
       return {status: data.status, message: data.message};
     } catch (error) {
@@ -84,7 +65,7 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
   };
 
   const register: TRegisterFC = async (payload: IRegister) => {
-    const response = await postData(payload.user ? 'register_customer' : 'register_artist', 
+    const response = await postData('register_artist', 
     {
       ...payload.details,
       address: Object.values(payload.details.address).join(', '),
@@ -96,8 +77,10 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
   };
 
   const resetPassword: TResetPasswwordFC = async (payload: IPassword) => {
+    const response = await putData('password_artist', payload);
+    const data = await response.json();
 
-    return {status: 'warning', message: 'Réinitialisation du mot de passe réussie'};
+    return {status: data.status, message: data.message};
   };
 
   const logout: TLogoutFC = async () => {

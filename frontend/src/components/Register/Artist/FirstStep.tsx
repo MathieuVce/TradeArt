@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { IUser } from "../../../@types/IUser";
 import { Grid, TextField } from "@mui/material";
 import { IconTextField } from "../../IconTextField";
-import { IAuth, IClient, IUser } from "../../../@types/IClient";
+import { IAuth, IClient } from "../../../@types/IClient";
 import { VisibilityOffRounded, VisibilityRounded } from "@material-ui/icons";
 import { checkEmail, checkPassword, checkBirthDate } from "../../../utils/utils";
 

@@ -6,6 +6,7 @@ import { SnackbarProvider } from "notistack";
 import reportWebVitals from './reportWebVitals';
 import Navigation from './navigation/Navigation';
 import { ThemeProvider } from '@mui/material/styles';
+import { UserProvider } from './contexts/UserContext';
 import { AlertProvier } from './contexts/AlertContext';
 import { ClientProvider } from './contexts/ClientContext';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
@@ -17,13 +18,15 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ClientProvider>
-      <ThemeProvider theme={theme}>
-        <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "right" }} maxSnack={4} preventDuplicate dense>
-          <AlertProvier>
-            <Navigation/>
-          </AlertProvier>
-        </SnackbarProvider>
-      </ThemeProvider>
+      <UserProvider>
+        <ThemeProvider theme={theme}>
+          <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "right" }} maxSnack={4} preventDuplicate dense>
+            <AlertProvier>
+              <Navigation/>
+            </AlertProvier>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </UserProvider>
     </ClientProvider>
   </React.StrictMode>
 );

@@ -1,5 +1,5 @@
+import { IUser } from "../../../@types/IUser";
 import { Grid, TextField } from "@mui/material";
-import { IUser } from "../../../@types/IClient";
 import { checkTel, checkBank, checkCity, checkPostalCode } from "../../../utils/utils";
 
 interface IUserSecondStepProps {
