@@ -1,15 +1,19 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router';
 import UserImage from '../assets/user.jpg';
+import { useEffect, useState } from 'react';
 import { Header } from '../components/Header';
 import ArtistImage from '../assets/artist.jpg';
-import { Copyright } from '../components/Copyright';
-import { Container, CssBaseline, FormControlLabel, Typography } from '@mui/material';
 import { MaterialUISwitch } from '../utils/utils';
+import { Outlet, useNavigate } from 'react-router';
+import { Copyright } from '../components/Copyright';
+import { Container, CssBaseline, FormControlLabel, Typography, Grid } from '@mui/material';
 
 const App: React.FunctionComponent = () => {
   const [user, setUser] = useState<boolean>(false);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    navigate('/login');
+  }, []);
   return (
     <>
       <Header/>
@@ -17,12 +21,17 @@ const App: React.FunctionComponent = () => {
         <img src={user ? UserImage : ArtistImage} alt='background' style={{ position: 'fixed', minWidth: '100%', maxHeight: '100vh'}}/>
         <div style={{ backgroundColor: 'white', minWidth: '100%', minHeight: '100%', position: 'fixed', opacity: '0.5' }}></div>
       </div>
-      <FormControlLabel color="primary" sx={{ paddingX: 4, position: {xs: 'absolute', sm: 'absolute', md: 'fixed', lg: 'fixed'}, paddingTop: 2 }} control={<MaterialUISwitch checked={!user} onChange={() => setUser(!user)}/>}
-        label={
-          <Typography variant="body1" color="textPrimary">
-            ARTISTE
-          </Typography>
-        } />
+      <Grid>
+        <Typography variant="body1" color="textPrimary"   sx={{ paddingLeft: 2, position: {xs: 'absolute', sm: 'absolute', md: 'fixed', lg: 'fixed'}, paddingTop: 3 }}>
+            CUSTOMER
+        </Typography>
+        <FormControlLabel color="primary" sx={{ paddingLeft: 15, position: {xs: 'absolute', sm: 'absolute', md: 'fixed', lg: 'fixed'}, paddingTop: 2 }} control={<MaterialUISwitch checked={!user} onChange={() => setUser(!user)}/>}
+          label={
+            <Typography variant="body1" color="textPrimary">
+              ARTIST
+            </Typography>
+          } />
+      </Grid>
       <Container component="main" maxWidth="xs" sx={{ mt: { xs: 4, sm: 6, md: 8, lg: 10 }}}>
         <CssBaseline/>
         <Outlet context={{ user }}/>

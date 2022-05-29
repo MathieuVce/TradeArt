@@ -127,10 +127,10 @@ export const Auth: React.FC<IAuthProps> = ({ type, values, children }) => {
         marginBottom: 12
       }}
     >
-      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+      <Avatar sx={{ mt: 4, bgcolor: 'secondary.main' }}>
         <LockOutlined/>
       </Avatar>
-      <Typography component="h1" variant="h5" sx={{ mb: 4, position: 'absolute', mt: 8 }}>
+      <Typography component="h1" variant="h5" sx={{ mb: 4, position: 'absolute', mt: 10 }}>
         {itemObj[type].info[0]}
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 12 }}>

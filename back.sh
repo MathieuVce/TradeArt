@@ -1,2 +1,2 @@
 #!/bin/sh
-python3 backend/API_Function.py
+cd backend && python3 API_Function.py

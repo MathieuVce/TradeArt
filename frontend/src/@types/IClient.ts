@@ -37,6 +37,7 @@ export interface IRegister {
 export interface IResponse {
   status: EAlert;
   message: string;
+  data?: any;
 };
 
 export interface IPassword {
@@ -44,3 +45,14 @@ export interface IPassword {
   password: string;
   confirmpassword: string;
 };
+
+export interface IWork {
+  work_id: number;
+  title: string;
+  price: number;
+  description: string;
+  evaluation: string;
+  picture: string;
+  sold: boolean;
+  artist_id: number;
+}

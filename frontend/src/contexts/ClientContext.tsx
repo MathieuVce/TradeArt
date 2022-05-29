@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import { IAuth, IClient, IPassword, IRegister } from "../@types/IClient";
-import { defaultClientValue, IClientContext, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC } from "../@types/IClientContext";
+import { defaultClientValue, IClientContext, TGetWorkFC, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC } from "../@types/IClientContext";
 
 export const ClientContext = createContext<IClientContext>(defaultClientValue);
 
@@ -9,12 +9,11 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
 
   const ip = 'http://localhost:8000/'
   
-  const fetchData = async (url: string) => {
-    return await fetch(ip+url)
-  };
+  // const getData = async (url: string) => {
+  //   return await fetch(ip+url)
+  // };
 
   const postData = async (url: string, data: any) => {
-
     const requestOptions = {
       method: 'POST',
       body: JSON.stringify(data)
@@ -35,13 +34,13 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
     try {
       const response = await putData('artist_log_in', payload);
       const data = await response.json();
-      console.log(data.data);
       if (data.status === 'success') {
         const address = {
           address: data.data[5].split(',')[0],
           postalcode: data.data[5].split(',')[1],
           city: data.data[5].split(',')[2]
         };
+
         setUser({
           user: false,
           id: data.data[0],
@@ -57,10 +56,19 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
           description: data.data[10],
           photo: data.data[11]
         });
+        localStorage.setItem('user', JSON.stringify({ email: payload.email, password: payload.password }));
       }
       return {status: data.status, message: data.message};
     } catch (error) {
       console.log(error)
+    }
+  };
+
+  const autolog = async () => {
+    const tmpUser = localStorage.getItem('user');
+
+    if (tmpUser !== null) {
+      await logout();
     }
   };
 
@@ -88,17 +96,24 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
       const response = await putData('artist_log_out', {email: user?.email});
       const data = await response.json();
       setUser(null);
-      return {status: 'success', message: data.detail};
+      localStorage.removeItem('user');
+      return {status: data.status, message: data.message};
     } catch (error) {
       console.log(error)
     }
   };
 
+  const getWork: TGetWorkFC = async () => {
+      const response = await postData('check_yourwork', {artist_id: user?.id});
+      const data = await response.json();
+      return {status: data.status, message: data.message, data: data.data};
+  };
 
   return (
     <ClientContext.Provider value={{
-        client: user,
+        client: user, autolog,
         login, register, resetPassword, logout,
+        getWork
     }}>
         {children}
     </ClientContext.Provider>

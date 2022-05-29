@@ -112,6 +112,7 @@ async def customer_log_in(payload: Request):
         message='Email non existant'
         return {'message': message,'status': status, 'data': customer}
 
+
     dbase.close()
     return {'message': message,'status': status, 'data': customer}
 
@@ -122,7 +123,7 @@ async def artist_log_out(payload: Request):
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
 
     dbase.execute('''UPDATE artist SET is_logged = 0  WHERE email = "{email}" '''.format(email= str(values_dict['email']).lower()))
-    message = 'Utilisateur déconnecté'
+    message = 'À bientot chez TradeArt !'
     status = 'success'
 
     dbase.close()    
@@ -273,24 +274,31 @@ async def all_work(payload: Request):
     dbase.close()
     return {'status':status, 'data':data}
 
-@app.get("/check_yourwork")
+@app.post("/check_yourwork")
 async def check_yourwork(payload: Request):
     values_dict = await payload.json()
 
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
 
     logverif=dbase.execute('''SELECT is_logged from artist WHERE artist_id = "{artist_id}" '''.format(artist_id= int(values_dict['artist_id']))).fetchall()
-    status =''
+    status = ''
+    data=[]
+
     
     if int(logverif[0][0]) == 0:
         status ='error'
-        data=[]
+        message = 'Vous devez être connecté pour voir vos oeuvres'
     else:
-        data = dbase.execute('''SELECT * FROM artwork WHERE artist_id = "{artist_id}"'''.format(artist_id=int(values_dict['artist_id']))).fetchall()
-        status = 'success'
+        try: 
+            data = dbase.execute('''SELECT * FROM artwork WHERE artist_id = "{artist_id}"'''.format(artist_id=int(values_dict['artist_id']))).fetchall()[0]
+            status = 'success'
+            message: ''
+        except:
+            status = 'warning'
+            message = 'Vous n\'avez pas encore d\'oeuvres'
 
     dbase.close()
-    return {'status':status,'data':data}
+    return {'status': status,'data': data, 'message': message}
 
 ##########################
 
