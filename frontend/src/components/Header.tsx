@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import logo from '../assets/logo.svg';
-import MenuIcon from '@material-ui/icons/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useNavigate } from 'react-router-dom';
 import  {Box, Menu, AppBar, Button, Toolbar, MenuItem, Container, IconButton, Typography } from '@mui/material';
 

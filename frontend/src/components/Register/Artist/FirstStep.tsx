@@ -3,7 +3,7 @@ import { IUser } from "../../../@types/IUser";
 import { Grid, TextField } from "@mui/material";
 import { IconTextField } from "../../IconTextField";
 import { IAuth, IClient } from "../../../@types/IClient";
-import { VisibilityOffRounded, VisibilityRounded } from "@material-ui/icons";
+import { VisibilityOffRounded, VisibilityRounded } from "@mui/icons-material";
 import { checkEmail, checkPassword, checkBirthDate } from "../../../utils/utils";
 
 interface IArtistFirstStepProps {

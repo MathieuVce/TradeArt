@@ -6,7 +6,7 @@ import { AlertContext } from '../../contexts/AlertContext';
 import { ClientContext } from '../../contexts/ClientContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, Typography, CssBaseline, IconProps } from '@mui/material';
-import { CameraRounded, HomeRounded, AccountBoxRounded, MonetizationOnRounded } from '@material-ui/icons';
+import { CameraRounded, HomeRounded, AccountBoxRounded, MonetizationOnRounded } from '@mui/icons-material';
 
 
 
@@ -39,7 +39,7 @@ export const ArtistHome: React.FC = () => {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {location.pathname === '/home' ? (
-          <Typography variant="h4" color='primary' sx={{ textAlign: 'center' }}>
+          <Typography variant="h4" color='primary' textAlign={'center'}>
             Bienvenue sur TradeArt {client?.firstname} {client?.lastname} !
           </Typography>
         ) : (

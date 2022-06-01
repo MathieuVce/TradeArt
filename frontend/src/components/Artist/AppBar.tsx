@@ -5,7 +5,7 @@ import { IResponse } from '../../@types/IClient';
 import { AlertContext } from '../../contexts/AlertContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ClientContext } from '../../contexts/ClientContext';
-import {  Menu, ExitToAppRounded } from '@material-ui/icons';
+import {  Menu, ExitToAppRounded } from '@mui/icons-material';
 import { Toolbar, Typography, IconButton, Box, IconProps } from "@mui/material";
 
 interface IAppBarComponentProps {
@@ -51,11 +51,11 @@ export const AppBarComponent: React.FC<IAppBarComponentProps> = ({ open, handleT
           )}
         </Typography>
         <Box
-            component='img'
-            sx={{ maxHeight: 80, height: 70, py: 0.5, mr: 2 }}
-            alt="logo"
-            src={logo}
-          />
+          component='img'
+          sx={{ maxHeight: 80, height: 70, py: 0.5, mr: 2 }}
+          alt="logo"
+          src={logo}
+        />
         <IconButton
           color="inherit"
           aria-label="logout"

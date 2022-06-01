@@ -6,7 +6,7 @@ import { Auth } from '../components/Auth';
 import { IPassword } from '../@types/IClient';
 import { checkEmail, checkPassword } from '../utils/utils';
 import { IconTextField } from '../components/IconTextField';
-import { VisibilityOffRounded, VisibilityRounded } from '@material-ui/icons';
+import { VisibilityOffRounded, VisibilityRounded } from '@mui/icons-material';
 
 const Password: React.FunctionComponent = () => {
   const [visible, setVisible] = useState(false);

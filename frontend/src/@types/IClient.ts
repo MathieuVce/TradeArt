@@ -6,7 +6,7 @@ export type TUser = {
 
 export interface IClient {
   user?: boolean;
-  id?: number;
+  artist_id?: number;
   email: string;
   birthdate: Date;
   lastname: string;
@@ -47,12 +47,12 @@ export interface IPassword {
 };
 
 export interface IWork {
-  work_id: number;
+  work_id?: number;
   title: string;
-  price: number;
+  price: string;
   description: string;
   evaluation: string;
-  picture: string;
-  sold: boolean;
-  artist_id: number;
+  picture?: string;
+  sold?: boolean;
+  artist_id?: number;
 }

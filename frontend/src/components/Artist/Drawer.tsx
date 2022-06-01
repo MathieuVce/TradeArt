@@ -1,7 +1,7 @@
 import { useTheme } from '@mui/material/styles';
 import { Drawer, DrawerHeader } from '../../utils/utils';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronRight, ChevronLeft } from '@material-ui/icons';
+import { ChevronRight, ChevronLeft } from '@mui/icons-material';
 import { List, Divider, IconButton, ListItem, ListItemButton, ListItemIcon , ListItemText, Typography, IconProps } from '@mui/material';
 
 interface IDrawerComponentProps {
@@ -46,12 +46,12 @@ export const DrawerComponent: React.FC<IDrawerComponentProps> = ({ open, handleT
                   minWidth: 0,
                   mr: open ? 2 : 'auto',
                   justifyContent: 'center',
-                  color: location.pathname === text ? 'whitesmoke' : 'grey'
+                  color: location.pathname === pages[text].link ? 'whitesmoke' : 'grey'
                 }}
               >
                 {pages[text].icon}
               </ListItemIcon>
-              <ListItemText sx={{ opacity: open ? 1 : 0, color: location.pathname === text ? 'whitesmoke' : 'grey' }}>
+              <ListItemText sx={{ opacity: open ? 1 : 0, color: location.pathname === pages[text].link ? 'whitesmoke' : 'grey' }}>
                 {text}
               </ListItemText>
             </ListItemButton>

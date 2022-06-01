@@ -1,9 +1,11 @@
-import { Switch } from '@mui/material';
+import { forwardRef } from "react";
 import user from "../assets/user.svg";
 import artist from "../assets/artist.svg";
 import MuiDrawer from '@mui/material/Drawer';
+import { TransitionProps } from "@mui/material/transitions";
 import { createTheme, CSSObject, styled, Theme } from '@mui/material/styles';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import { Switch, IconButton, IconButtonProps, Slide, Avatar } from '@mui/material';
 
 export const theme = createTheme({
   palette: {
@@ -61,7 +63,21 @@ export const checkCity = (input: string) => {
 export const checkTel = (tel: string) => {
 	// eslint-disable-next-line no-useless-escape
 	return /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(tel);
-}
+};
+
+export const formatDate = (date: string | number | Date) => {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+};
 
 export const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 75,
@@ -175,3 +191,70 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
     }),
   }),
 );
+
+export const create_blob = (file: Blob, callback: { (blob_string: any): void; (arg0: string | ArrayBuffer | null): void; })  => {
+  var reader = new FileReader();
+  reader.onload = function() { callback(reader.result) };
+  reader.readAsDataURL(file);
+}
+
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+export const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
+export const Transition = forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+export const stringToColor = (string: string) => {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = '#';
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+  return color;
+};
+
+export const stringAvatar = (name: string, size?: number) => {
+  return {
+    sx: {
+      bgcolor: '#115571',
+      boxShadow: 2,
+      height: size || 50,
+      width: size || 50
+    },
+    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+  };
+};
+
+export const SmallAvatar = styled(Avatar)(({ theme }) => ({
+  width: 35,
+  height: 35,
+  border: `2px solid ${theme.palette.background.paper}`,
+}));
