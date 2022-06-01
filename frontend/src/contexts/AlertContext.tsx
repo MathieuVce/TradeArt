@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { CloseRounded } from '@material-ui/icons';
+import { CloseRounded } from '@mui/icons-material';
 import { TAlerts, IAlert } from '../@types/IAlert';
 import { SnackbarMessage, useSnackbar, VariantType } from 'notistack';
 import React, { createContext, Fragment, useCallback } from 'react';

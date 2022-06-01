@@ -96,7 +96,7 @@ async def customer_log_in(payload: Request):
 
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
 
-    passverif=dbase.execute('''SELECT password from artist WHERE email = "{email}" '''.format(email= str(values_dict['email']).lower())).fetchall()
+    passverif=dbase.execute('''SELECT password from customer WHERE email = "{email}" '''.format(email= str(values_dict['email']).lower())).fetchall()
 
     message = 'Email ou mot de passe incorrect'
     status = 'error'
@@ -112,6 +112,7 @@ async def customer_log_in(payload: Request):
         message='Email non existant'
         return {'message': message,'status': status, 'data': customer}
 
+
     dbase.close()
     return {'message': message,'status': status, 'data': customer}
 
@@ -122,8 +123,8 @@ async def artist_log_out(payload: Request):
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
 
     dbase.execute('''UPDATE artist SET is_logged = 0  WHERE email = "{email}" '''.format(email= str(values_dict['email']).lower()))
-    message = 'Utilisateur déconnecté'
-    status = 'success'
+    message = 'À bientot chez TradeArt !'
+    status = 'info'
 
     dbase.close()    
     return {'message': message, "status" : status }
@@ -141,6 +142,43 @@ async def customer_log_out(payload: Request):
     dbase.close()    
     return {'message':message , 'status': status }
 
+
+@app.put('/password_artist')
+async def password_artist(payload: Request):
+    values_dict = await payload.json()
+
+    dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
+
+    artist = dbase.execute('''SELECT * FROM artist WHERE email = "{email}"'''.format(email=str(values_dict["email"]).lower())).fetchall()
+
+    if len(artist)==0:
+        message = 'Email non existant'
+        status = 'warning'
+    else: 
+        dbase.execute('''UPDATE artist SET password ="{password}" WHERE email = "{email}"'''.format(password=str(values_dict['password']), email =str(values_dict['email']).lower()))
+        message = 'Mot de passe réinitialisé'
+        status ='success'
+    dbase.close()
+    return{'message':message, 'status':status}
+
+@app.put('/password_customer')
+async def password_customer(payload: Request):
+    values_dict = await payload.json()
+
+    dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
+
+    customer = dbase.execute('''SELECT * FROM customer WHERE email = "{email}"'''.format(email=str(values_dict["email"]).lower())).fetchall()
+
+    if len(customer)==0:
+        message = 'Email non existant'
+        status = 'warning'
+    else: 
+        dbase.execute('''UPDATE customer SET password ="{password}" WHERE email = "{email}"'''.format(password=str(values_dict['password']), email =str(values_dict['email']).lower()))
+        message = 'Mot de passe réinitialisé'
+        status ='success'
+    dbase.close()
+    return{'message':message, 'status':status}
+
 #####################
 
 @app.put('/update_artist')
@@ -156,19 +194,16 @@ async def update_artist(payload: Request):
     if int(logverif[0][0]) == 0:
         message = "Utilisateur non connecté"
         status ='error'
-        artist=[]
     else:
-        list= dbase.execute('''SELECT * FROM artist WHERE email = "{email}"'''.format(email=str(values_dict['email']).lower())).fetchall()
-        if len(list)==0:  
-            dbase.execute('''UPDATE artist SET firstname = "{firstname}", lastname = "{lastname}" , birthdate ="{birthdate}" , bank_account_number= "{bank_account_number}", address = "{address}", email = "{email}", phonenumber="{phonenumber}", institution = "{institution}", cursus = "{cursus}", description = "{description}", photo = "{photo}" ,password ="{password}" WHERE artist_id = "{artist_id}"'''.format(firtname=str(values_dict['firstname']).capitalize(),lastname = str(values_dict['lastname']).capitalize(), birthdate=date(values_dict['birthdate']),bank_account_number=str(values_dict['bank_account_number']).upper(),address=str(values_dict['address']),email=str(values_dict['email']).lower(),phonenumber=str(values_dict['phonenumber']),institution=str(values_dict['institution']), cursus=str(values_dict['cursus']), description = str(values_dict['description'], photo = str(values_dict['photo']), password=str(values_dict['password']), artist_id=int(values_dict['artist_id']))))
-            artist=dbase.execute('''SELECT * FROM artist WHERE email = "{email}"'''.format(email=str(values_dict['email']).lower()))
+        try:
+            dbase.execute('''UPDATE artist SET firstname = "{firstname}", lastname = "{lastname}" , birthdate ="{birthdate}" , bank_account_number= "{bank_account_number}", address = "{address}", email = "{email}", phonenumber="{phonenumber}", institution = "{institution}", cursus = "{cursus}", description = "{description}", photo = "{photo}" WHERE artist_id = "{artist_id}"'''.format(firstname=str(values_dict['firstname']).capitalize(),lastname = str(values_dict['lastname']).capitalize(), birthdate=str(values_dict['birthdate']),bank_account_number=str(values_dict['bank_account_number']).upper(),address=str(values_dict['address']),email=str(values_dict['email']).lower(),phonenumber=str(values_dict['phonenumber']),institution=str(values_dict['institution']), cursus=str(values_dict['cursus']), description = str(values_dict['description']), photo = str(values_dict['photo']), artist_id=int(values_dict['artist_id'])))
             message= "Données mises à jour"
             status='success'
-        else : 
-            message ='Email déjà existant'
-            status = 'error'
+        except:
+            message= "Erreur lors de la mise à jour du profil."
+            status='error'
     dbase.close()
-    return {'message':message,'status':status, 'data':artist}
+    return {'message':message,'status':status}
 
 @app.put('/update_customer')
 async def update_customer(payload: Request):
@@ -214,15 +249,37 @@ async def register_work(payload: Request):
         message = "Utilisateur non connecté"
         status ='error'
 
-    else: 
-        artist_id= dbase.execute('''SELECT artist_id FROM artist WHERE email = "{email}" '''.format(name= str(values_dict['email']).lower())).fetchall()[0][0]
-        artist = dbase.execute('''SELECT * FROM artist WHERE email = "{email}" '''.format(name= str(values_dict['email']).lower())).fetchall()
-        dbase.execute('''INSERT INTO artwork(title,price,description,evaluation,picture,sold,artist_id) VALUES(?,?,?,?,?,?,?) ''', (str(values_dict['title']), float(values_dict['price']), str(values_dict['description']),str(values_dict['evaluation']), str(values_dict['picture']),int(0),int(artist_id)))
-        message = "Oeuvre publiée."
-        status ='success'
+    else:
+        try: 
+            dbase.execute('''INSERT INTO artwork(title,price,description,evaluation,picture,sold,artist_id) VALUES(?,?,?,?,?,?,?) ''', (str(values_dict['title']), float(values_dict['price']), str(values_dict['description']),str(values_dict['evaluation']), str(values_dict['picture']),int(0),int(values_dict['artist_id'])))
+            message = "Oeuvre publiée."
+            status ='success'
+        except:
+            message = "Une erreur est survenue... Veuillez réessayer."
+            status = 'error'
 
     dbase.close()
-    return {'message':message,'status':status,'data':artist}
+    return {'message':message,'status':status}
+
+@app.post("/delete_work")
+async def delete_work(payload: Request): 
+    values_dict = await payload.json()
+
+    dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
+
+    message = ""
+    status =''
+
+    try:
+        dbase.execute('''DELETE from artwork  WHERE work_id = "{work_id}" '''.format(work_id= int(values_dict['work_id'])))
+        message = "Oeuvre correctement supprimée !"
+        status ='success'
+    except:
+        message = "Une erreur est survenue..."
+        status ='error'
+
+    dbase.close()
+    return {'message':message,'status':status}
 
 @app.get("/all_work")
 async def all_work(payload: Request):
@@ -236,24 +293,31 @@ async def all_work(payload: Request):
     dbase.close()
     return {'status':status, 'data':data}
 
-@app.get("/check_yourwork")
+@app.post("/check_yourwork")
 async def check_yourwork(payload: Request):
     values_dict = await payload.json()
 
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
 
     logverif=dbase.execute('''SELECT is_logged from artist WHERE artist_id = "{artist_id}" '''.format(artist_id= int(values_dict['artist_id']))).fetchall()
-    status =''
+    status = ''
+    message = ''
+    data=[]
+
     
     if int(logverif[0][0]) == 0:
         status ='error'
-        data=[]
+        message = 'Vous devez être connecté pour voir vos oeuvres'
     else:
         data = dbase.execute('''SELECT * FROM artwork WHERE artist_id = "{artist_id}"'''.format(artist_id=int(values_dict['artist_id']))).fetchall()
         status = 'success'
+        message: ''
+        if len(data) == 0:
+            status = 'warning'
+            message = 'Vous n\'avez pas encore d\'oeuvres'
 
     dbase.close()
-    return {'status':status,'data':data}
+    return {'status': status,'data': data, 'message': message}
 
 ##########################
 

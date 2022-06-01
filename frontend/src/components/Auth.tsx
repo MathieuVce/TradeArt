@@ -2,11 +2,13 @@ import { EAuth } from "../@types/EAuth";
 import { LoadingButton } from '@mui/lab';
 import { checkEmail } from '../utils/utils';
 import { useContext, useState } from "react";
+import { IRegisterU } from "../@types/IUser";
+import { UserContext } from "../contexts/UserContext";
 import { AlertContext } from "../contexts/AlertContext";
 import { ClientContext } from "../contexts/ClientContext";
 import { useNavigate, Link, useOutletContext } from 'react-router-dom';
-import { IAuth, IPassword, IRegister, IRegisterU, IResponse, TUser } from "../@types/IClient";
-import { LockOutlined, PersonRounded, LockOpenRounded, RotateLeftRounded } from '@material-ui/icons';
+import { IAuth, IPassword, IRegister, IResponse, TUser } from "../@types/IClient";
+import { LockOutlined, PersonRounded, LockOpenRounded, RotateLeftRounded } from '@mui/icons-material';
 import { Box, Grid, Avatar, IconProps, Checkbox, Typography, FormControlLabel, Button } from '@mui/material';
 
 interface IAuthProps {
@@ -16,6 +18,7 @@ interface IAuthProps {
 
 export const Auth: React.FC<IAuthProps> = ({ type, values, children }) => {
   const { login, register, resetPassword } = useContext(ClientContext);
+  const { loginU, registerU, resetPasswordU } = useContext(UserContext);
   const { Alerts } = useContext(AlertContext);
   const navigate = useNavigate();
   const { user } = useOutletContext<TUser>()
@@ -38,13 +41,22 @@ export const Auth: React.FC<IAuthProps> = ({ type, values, children }) => {
     event.preventDefault();
     const callbackList: {[key: string]: Function} = {
       'login': async function loginUser() {
-        return await login({...(values as IAuth), user});
+        if (user)
+          return await loginU(values as IAuth);
+        else
+          return await login(values as IAuth);
       },
       'register': async function registerUser() {
-        return await register({...(values as IRegister), user});
+        if (user)
+          return await registerU(values as IRegisterU);
+        else
+          return await register(values as IRegister);
       },
       'password': async function resetUserPassword() {
-        return await resetPassword(values as IPassword);
+        if (user)
+          return await resetPasswordU(values as IPassword);
+        else
+          return await resetPassword(values as IPassword);
       }
     };
     setLoading(true);
@@ -60,7 +72,7 @@ export const Auth: React.FC<IAuthProps> = ({ type, values, children }) => {
     const callbackList: {[key: string]: Function} = {
       'login': function disableLogin() {
         const authValues = values as IAuth;
-        return (!checkEmail(authValues.email) || !authValues.password);
+        return (!authValues.email || !authValues.password);
       },
       'register': function disableRegister() {
         if (user) {
@@ -73,7 +85,8 @@ export const Auth: React.FC<IAuthProps> = ({ type, values, children }) => {
             !registerValues.details.address ||
             !registerValues.details.phonenumber ||
             !registerValues.details.credit_card_number ||
-            !checkEmail(registerValues.login.email));
+            !registerValues.login.email
+          );
         } else {
           const registerValues = values as IRegister;
           return (!consent ||
@@ -88,12 +101,17 @@ export const Auth: React.FC<IAuthProps> = ({ type, values, children }) => {
             !registerValues.details.cursus ||
             !registerValues.details.description ||
             !registerValues.details.photo ||
-            !checkEmail(registerValues.login.email));
+            !registerValues.login.email
+          );
         }
       },
       'password': function disablePassword() {
-        const { email } = values as IPassword;
-        return (!checkEmail(email));
+        const passwordValues = values as IPassword;
+        return (!checkEmail(passwordValues.email) ||
+          !passwordValues.password ||
+          !passwordValues.confirmpassword ||
+          passwordValues.password !== passwordValues.confirmpassword
+        );
       }
     };
     return callbackList[type]();
@@ -109,10 +127,10 @@ export const Auth: React.FC<IAuthProps> = ({ type, values, children }) => {
         marginBottom: 12
       }}
     >
-      <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+      <Avatar sx={{ mt: 4, bgcolor: 'secondary.main' }}>
         <LockOutlined/>
       </Avatar>
-      <Typography component="h1" variant="h5" sx={{ mb: 4, position: 'absolute', mt: 8 }}>
+      <Typography component="h1" variant="h5" sx={{ mb: 4, position: 'absolute', mt: 10 }}>
         {itemObj[type].info[0]}
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 12 }}>

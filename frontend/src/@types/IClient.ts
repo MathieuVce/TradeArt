@@ -6,7 +6,7 @@ export type TUser = {
 
 export interface IClient {
   user?: boolean;
-  id?: number;
+  artist_id?: number;
   email: string;
   birthdate: Date;
   lastname: string;
@@ -24,46 +24,35 @@ export interface IClient {
   photo?: string;
 };
 
-export interface IUser {
-  user?: boolean;
-  id?: number;
-  firstname: string;
-  lastname: string;
-  username?: string;
-  address: {
-    address: string;
-    postalcode: string;
-    city: string;
-  };
-  birthdate: Date;
-  credit_card_number?: string;
-  email: string;
-  phonenumber: string;
-};
-
 export interface IAuth {
   email: string;
   password: string;
-  user?: boolean;
 };
 
 export interface IRegister {
   login: IAuth;
   details: IClient;
-  user?: boolean;
-};
-
-export interface IRegisterU {
-  login: IAuth;
-  details: IUser;
-  user?: boolean;
 };
 
 export interface IResponse {
   status: EAlert;
   message: string;
+  data?: any;
 };
 
 export interface IPassword {
   email: string;
+  password: string;
+  confirmpassword: string;
 };
+
+export interface IWork {
+  work_id?: number;
+  title: string;
+  price: string;
+  description: string;
+  evaluation: string;
+  picture?: string;
+  sold?: boolean;
+  artist_id?: number;
+}
