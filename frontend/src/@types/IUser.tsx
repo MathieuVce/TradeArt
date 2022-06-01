@@ -2,7 +2,7 @@ import { IAuth } from "./IClient";
 
 export interface IUser {
   user?: boolean;
-  id?: number;
+  customer_id?: number;
   firstname: string;
   lastname: string;
   username?: string;

@@ -136,8 +136,8 @@ async def customer_log_out(payload: Request):
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
 
     dbase.execute('''UPDATE customer SET is_logged = 0  WHERE email = "{email}" '''.format(email= str(values_dict['email']).lower()))
-    message = 'Utilisateur déconnecté'
-    status = 'success'
+    message = 'À bientot chez TradeArt !'
+    status = 'info'
 
     dbase.close()    
     return {'message':message , 'status': status }
@@ -213,24 +213,20 @@ async def update_customer(payload: Request):
     logverif=dbase.execute('''SELECT is_logged from customer WHERE customer_id = "{customer_id}" '''.format(customer_id= int(values_dict['customer_id']))).fetchall()
     message = ''
     status =''
-    user = []
     
     if int(logverif[0][0]) == 0:
         message = "Utilisateur non connecté"
         status = 'error'
-
     else:
-        list = dbase.execute('''SELECT * FROM customer WHERE email ="{email}"'''.format(email=str(values_dict['email']).lower())).fetchall()
-        if len(list)==0:
-            dbase.execute('''UPDATE customer SET firstname = "{firstname}" , lastname ="{lastname}" , username = "{username}", address = "{address}", birthdate = "{birthdate}" , credit_card_number = "{credit_card_number}", email = "{email}", phonenumber="{phonenumber}" ,password ="{password}" WHERE customer_id = "{customer_id}"'''.format(firstname=str(values_dict['firstname']).capitalize(),lastname=str(values_dict['lastname']).capitalize(),username=str(values_dict['username']),address=str(values_dict['address']),birthdate=str(values_dict['birthdate']),credit_card_number=str(values_dict['credit_card_number']),email=str(values_dict['email']).lower(), phonenumber=str(values_dict['phonenumber']), password=str(values_dict["password"]), customer_id=int(values_dict["customer_id"])))
+        try:
+            dbase.execute('''UPDATE customer SET firstname = "{firstname}" , lastname ="{lastname}" , username = "{username}", address = "{address}", birthdate = "{birthdate}" , credit_card_number = "{credit_card_number}", email = "{email}", phonenumber="{phonenumber}" WHERE customer_id = "{customer_id}"'''.format(firstname=str(values_dict['firstname']).capitalize(),lastname=str(values_dict['lastname']).capitalize(),username=str(values_dict['username']),address=str(values_dict['address']),birthdate=str(values_dict['birthdate']),credit_card_number=str(values_dict['credit_card_number']),email=str(values_dict['email']).lower(), phonenumber=str(values_dict['phonenumber']), customer_id=int(values_dict["customer_id"])))
             message= "Données mises à jour"
             status = 'success'
-            user = dbase.execute('''SELECT * FROM customer WHERE email = "{email}"'''.format(email=str(values_dict['email']).lower()))
-        else : 
-            message = 'Email déjà existant'
-            status = 'error'
+        except:
+            message= "Erreur lors de la mise à jour du profil."
+            status='error'
     dbase.close()
-    return {'message': message, 'status': status, 'data':user}
+    return {'message': message, 'status': status}
 
 ###########
 

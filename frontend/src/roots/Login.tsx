@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import { IAuth } from '../@types/IClient';
 import { Auth } from '../components/Auth';
 import { checkEmail } from '../utils/utils';
+import { Grid, TextField, Button } from '@mui/material';
 import { IconTextField } from '../components/IconTextField';
 import { VisibilityRounded, VisibilityOffRounded } from '@mui/icons-material';
-import { Grid, TextField, Button } from '@mui/material';
 
 const Login: React.FunctionComponent = () => {
   const [visible, setVisible] = useState(false);
