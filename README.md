@@ -22,6 +22,7 @@ And of course Trade ARt itself is open source with a [public repository](https:/
 Trade Art requires: 
 - [Node.js](https://nodejs.org/) v16+
 - [react](https://fr.reactjs.org/) v17+
+- - [materialUI](https://mui.com/) - V5
 
 
 Install the dependencies and devDependencies and start the server.
