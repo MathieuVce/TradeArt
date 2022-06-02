@@ -21,3 +21,10 @@ export interface IRegisterU {
   login: IAuth;
   details: IUser;
 };
+
+export interface IPaymentValues {
+  amount: number;
+  ccnumber: string;
+  ccexp: string;
+  cccvc: string;
+};

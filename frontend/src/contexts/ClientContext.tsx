@@ -94,7 +94,8 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
 
   const logout: TLogoutFC = async () => {
     try {
-      const response = await putData('artist_log_out', {email: user?.email});
+      const tmpUser = localStorage.getItem('user');
+      const response = await putData('artist_log_out', {email: user?.email || JSON.parse(tmpUser!).email});
       const data = await response.json();
       setUser(null);
       localStorage.removeItem('user');

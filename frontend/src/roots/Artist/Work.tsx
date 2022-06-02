@@ -21,7 +21,6 @@ const ArtistWork: React.FunctionComponent = () => {
 
   const getWorkData = async () => {
     const response: IResponse = await getWork();
-    console.log(response);
     if (response.data?.length === 0) {
       Alerts[response.status]({message: response.message});
       setWorks(response.data);
@@ -104,7 +103,6 @@ const ArtistWork: React.FunctionComponent = () => {
         </Grid> 
       ) : (
         <>
-          {/* <Grid container columnSpacing={2} rowSpacing={0} justifyContent="space-evenly" alignItems="baseline" xs={12}> */}
           <Grid container columnSpacing={2} rowSpacing={0} justifyContent="space-evenly" alignItems="baseline">
             {works?.map((work, i) => (
               <CardComponent key={i} work={work} handleDelete={handleDelete} client={client!} isExpanding={expand}/>

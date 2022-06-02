@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import { IUser, IRegisterU } from "../@types/IUser";
 import { IAuth, IPassword } from "../@types/IClient";
-import { IUserContext, defaultUserValue, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC, TUpdateFC } from "../@types/IUserContext";
+import { IUserContext, defaultUserValue, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC, TUpdateFC, TGetWorksFC } from "../@types/IUserContext";
 import { formatDate } from "../utils/utils";
 
 export const UserContext = createContext<IUserContext>(defaultUserValue);
@@ -92,7 +92,8 @@ export const UserProvider: React.FC<any> = ({ children }) => {
 
   const logoutU: TLogoutFC = async () => {
     try {
-      const response = await putData('customer_log_out', {email: user?.email});
+      const tmpUser = localStorage.getItem('userU');
+      const response = await putData('customer_log_out', {email: user?.email || JSON.parse(tmpUser!).email});
       const data = await response.json();
       setUser(null);
       localStorage.removeItem('user');
@@ -100,6 +101,16 @@ export const UserProvider: React.FC<any> = ({ children }) => {
     } catch (error) {
       console.log(error)
     }
+  };
+  const getWorks: TGetWorksFC = async () => {
+    try {
+      const response = await fetchData('all_work');
+      const data = await response.json();
+      return {status: data.status, message: data.message, data: data.data};
+    } catch (error) {
+      console.log(error)
+    }
+
   };
 
   const updateU: TUpdateFC = async (payload: IUser) => {
@@ -122,7 +133,7 @@ export const UserProvider: React.FC<any> = ({ children }) => {
     <UserContext.Provider value={{
         user, autologU,
         loginU, registerU, resetPasswordU, logoutU,
-        updateU,
+        updateU, getWorks
     }}>
         {children}
     </UserContext.Provider>

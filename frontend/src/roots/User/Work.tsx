@@ -1,24 +1,36 @@
-import { AddRounded } from '@mui/icons-material';
-import { IWork } from "../../@types/IClient";
+import { IResponse, IWork } from "../../@types/IClient";
 import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../contexts/UserContext";
 import { AlertContext } from "../../contexts/AlertContext";
-import { ClientContext } from "../../contexts/ClientContext";
+import { CardComponent } from "../../components/User/Card";
 import { OpenInFullRounded, CloseFullscreenRounded } from '@mui/icons-material';
-import { Grid, Typography, Button, FormControlLabel, Switch, Box } from "@mui/material";
+import { Grid, Typography, FormControlLabel, Switch, Box } from "@mui/material";
 
 const UserWorks: React.FunctionComponent = () => {
-  const { client, getWork, createWork, deleteWork } = useContext(ClientContext);
   const { Alerts } = useContext(AlertContext);
-  const [open, setOpen] = useState(false);
+  const { user, getWorks } = useContext(UserContext);
   const [expand, setExpand] = useState(true);
   const [works, setWorks] = useState<IWork[]>();
 
-  const handleOpen = () => {
-    setOpen(!open);
-  };
-
   const getWorkData = async () => {
-    setWorks([])
+    const response: IResponse = await getWorks();
+    if (response.data?.length === 0) {
+      setWorks(response.data);
+    } else {
+      const promiseArray = response.data.map((work: any[]) => {
+        return {
+          work_id: parseInt(work[0]),
+          title: work[1],
+          price: parseFloat(work[2]),
+          description: work[3],
+          evaluation: work[4],
+          picture: work[5],
+          sold: work[6] === 0 ? false : true
+        }
+      });
+      const data: IWork[] = await Promise.all(promiseArray);
+      setWorks(data);
+    }
   };
 
   useEffect(() => {
@@ -61,12 +73,9 @@ const UserWorks: React.FunctionComponent = () => {
         </Grid> 
       ) : (
         <>
-          {/* <Grid container columnSpacing={2} rowSpacing={0} justifyContent="space-evenly" alignItems="baseline" xs={12}> */}
           <Grid container columnSpacing={2} rowSpacing={0} justifyContent="space-evenly" alignItems="baseline">
             {works?.map((work, i) => (
-              <>
-              </>
-              // <CardComponent key={i} work={work} handleDelete={handleDelete} client={client!} isExpanding={expand}/>
+              <CardComponent key={i} work={work} handleBuy={async () => alert('buy')} isExpanding={expand}/>
             ))}
           </Grid>
         </>

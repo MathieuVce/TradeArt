@@ -45,10 +45,9 @@ export const AppBarComponent: React.FC<IAppBarComponentProps> = ({ open, handleT
         </IconButton>
         <Typography  justifySelf={'center'} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
           {Object.keys(pages).map((page, i) => {
-            if (location.pathname === pages[page].link) {
-              return <label key={i}>{page}</label>
-            } else
-              return <></>
+            <Typography key={i} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+              {location.pathname === pages[page].link ? page : ''}
+            </Typography>
           }
           )}
         </Typography>

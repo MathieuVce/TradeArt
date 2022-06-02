@@ -114,7 +114,7 @@ const UserProfil: React.FunctionComponent = () => {
               value={clientValues.birthdate}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               fullWidth
@@ -168,7 +168,7 @@ const UserProfil: React.FunctionComponent = () => {
               helperText={!checkCity(clientValues.address.city) ? "Veuillez entrer une ville valide" : ' '}
             />
           </Grid>
-          <Grid container xs={12} sm={6} spacing={2} alignItems={'center'} justifyContent={'flex-end'}>
+          <Grid container spacing={2} justifyContent='flex-end' sx={{ mt: 1 }}>
             <Grid item>
               <Button variant='outlined' onClick={() => (setClientValues(user!))}>
                 Annuler
@@ -183,7 +183,7 @@ const UserProfil: React.FunctionComponent = () => {
                 endIcon={<SettingsApplicationsRounded/>}
                 loading={loading}
                 loadingPosition="end"
-                >
+              >
                 Enregistrer
               </LoadingButton>
             </Grid>

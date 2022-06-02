@@ -15,14 +15,17 @@ import UserProfil from "../roots/User/Profil";
 import ArtistSale from "../roots/Artist/Sale";
 import ArtistWork from "../roots/Artist/Work";
 import ArtistProfil from "../roots/Artist/Profil";
+import { UserContext } from '../contexts/UserContext';
 import { ClientContext } from '../contexts/ClientContext';
 
 const Navigation: React.FunctionComponent = () => {
+  const { autologU } = useContext(UserContext);
   const { autolog } = useContext(ClientContext);
 
   useEffect(() => {
     (async () => {
       await autolog();
+      await autologU();
     })();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

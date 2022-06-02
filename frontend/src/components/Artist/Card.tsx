@@ -26,7 +26,6 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleDelet
     setOpen(!open);
   };
   return (
-    // <Grid item>
      <Grid item xs={12} sm={6}>
       <Card sx={{ minWidth: 275, mt: 2, boxShadow: 3 }}>
         <CardHeader

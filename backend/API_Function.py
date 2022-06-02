@@ -278,13 +278,15 @@ async def delete_work(payload: Request):
     return {'message':message,'status':status}
 
 @app.get("/all_work")
-async def all_work(payload: Request):
-    values_dict = await payload.json()
-
+async def all_work():
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
+    data=[]
 
-    data = dbase.execute('''SELECT * FROM artwork''').fetchall()
-    status = 'success'
+    try:
+        data = dbase.execute('''SELECT * FROM artwork''').fetchall()
+        status = 'success'
+    except:
+        status = 'error'
 
     dbase.close()
     return {'status':status, 'data':data}
