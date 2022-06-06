@@ -34,8 +34,8 @@ const Password: React.FunctionComponent = () => {
         name="email"
         autoComplete="email"
         autoFocus
-        error={!checkEmail(passwordValues.email)}
-        helperText={!checkEmail(passwordValues.email) ? "Veuillez suivre le format d'email: exemple@exemple.com" : ''}
+        error={passwordValues.email ? !checkEmail(passwordValues.email) : false}
+        helperText={passwordValues.email ? (!checkEmail(passwordValues.email) ? "Veuillez suivre le format d'email: exemple@exemple.com" : '') : ''}
         onChange={(e) => handleChangeAuth('email', e.target.value)}
       />
       <IconTextField
@@ -51,8 +51,8 @@ const Password: React.FunctionComponent = () => {
         onChange={(e: { target: { value: string; }; }) => handleChangeAuth('password', e.target.value)}
         iconEnd={visible ? <VisibilityOffRounded/> : <VisibilityRounded/>}
         onIconClick={() => setVisible(!visible)}
-        error={!checkPassword(passwordValues.password)}
-        helperText={!checkPassword(passwordValues.password) ? "Votre mot de passe doit contenir au moins 6 caractères, une lettre majuscule et un chiffre. Pas d'accent ni de caractère spécial." : ' '}
+        error={passwordValues.password ? !checkPassword(passwordValues.password) : false}
+        helperText={passwordValues.password ? (!checkPassword(passwordValues.password) ? "Votre mot de passe doit contenir au moins 6 caractères, une lettre majuscule et un chiffre. Pas d'accent ni de caractère spécial." : '') : ''}
       />
       <TextField
         margin="normal"

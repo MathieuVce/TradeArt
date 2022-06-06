@@ -12,8 +12,8 @@ import { VisibilityRounded, VisibilityOffRounded } from '@mui/icons-material';
 const Login: React.FunctionComponent = () => {
   const [visible, setVisible] = useState(false);
   const [authValues, setAuthValues] = useState<IAuth>({
-    email: 'vacancemathieu@gmail.com',
-    password: 'Motdepasse1',
+    email: 'oamakhma@gmail.com',
+    password: 'Azer123',
   });
 
   const handleChangeAuth = (prop: keyof typeof authValues, value: string | boolean) => {

@@ -1,3 +1,4 @@
+import { IPaymentValues } from "../../@types/IUser";
 import { IResponse, IWork } from "../../@types/IClient";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
@@ -8,9 +9,17 @@ import { Grid, Typography, FormControlLabel, Switch, Box } from "@mui/material";
 
 const UserWorks: React.FunctionComponent = () => {
   const { Alerts } = useContext(AlertContext);
-  const { user, getWorks } = useContext(UserContext);
+  const { getWorks, user, createOrder } = useContext(UserContext);
   const [expand, setExpand] = useState(true);
   const [works, setWorks] = useState<IWork[]>();
+  const [paymentValues, setPaymentValues] = useState<IPaymentValues>({
+    amount: 0,
+    ccnumber: "",
+    ccexp: "",
+    cccvc: "",
+    address: user?.address!,
+    save: false
+  });
 
   const getWorkData = async () => {
     const response: IResponse = await getWorks();
@@ -18,6 +27,18 @@ const UserWorks: React.FunctionComponent = () => {
       setWorks(response.data);
     } else {
       const promiseArray = response.data.map((work: any[]) => {
+        console.log(work);
+        const artist = {
+          artist_id: parseInt(work[8]),
+          email: work[15],
+          lastname: work[11],
+          firstname: work[10],
+          phonenumber: work[16],
+          institution: work[17],
+          cursus: work[18],
+          photo: work[20],
+          info: work[7] === '0' ? false : true
+        }
         return {
           work_id: parseInt(work[0]),
           title: work[1],
@@ -25,13 +46,32 @@ const UserWorks: React.FunctionComponent = () => {
           description: work[3],
           evaluation: work[4],
           picture: work[5],
-          sold: work[6] === 0 ? false : true
+          sold: work[6] === 0 ? false : true,
+          artist
         }
       });
       const data: IWork[] = await Promise.all(promiseArray);
       setWorks(data);
     }
   };
+
+  const handleBuy = async (work_id: number) => {
+      alert(`${paymentValues.ccnumber}&${paymentValues.ccexp}&${paymentValues.cccvc}`);
+      alert(work_id);
+      alert(user?.customer_id!);
+      alert(Object.values(paymentValues.address).join('&'));
+      alert(paymentValues.amount);
+      alert(paymentValues.save ? 1 : 0)
+    // const response: IResponse = await createOrder({
+    //   credit_card_number: `${paymentValues.ccnumber}&${paymentValues.ccexp}&${paymentValues.cccvc}`,
+    //   work_id,
+      // user?.customer_id!,
+    //   orderlocation: Object.values(paymentValues.address).join('&'),
+    //   price: paymentValues.amount,
+    //   save: paymentValues.save ? 1 : 0
+    // });
+    // Alerts[response.status]({message: response.message});
+  }
 
   useEffect(() => {
     getWorkData();
@@ -75,7 +115,7 @@ const UserWorks: React.FunctionComponent = () => {
         <>
           <Grid container columnSpacing={2} rowSpacing={0} justifyContent="space-evenly" alignItems="baseline">
             {works?.map((work, i) => (
-              <CardComponent key={i} work={work} handleBuy={async () => alert('buy')} isExpanding={expand}/>
+              <CardComponent key={i} work={work} handleBuy={handleBuy} isExpanding={expand} client={work.artist!} paymentValues={paymentValues} setPaymentValues={setPaymentValues}/>
             ))}
           </Grid>
         </>

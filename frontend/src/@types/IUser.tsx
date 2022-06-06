@@ -27,4 +27,19 @@ export interface IPaymentValues {
   ccnumber: string;
   ccexp: string;
   cccvc: string;
+  save: boolean;
+  address: {
+    address: string;
+    postalcode: string;
+    city: string;
+  };
 };
+
+export interface ICreateOrder {
+  save: number;
+  work_id: number;
+  customer_id: number;
+  orderlocation: string;
+  price: number;
+  credit_card_number: string;
+}

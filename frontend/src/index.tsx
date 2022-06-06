@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom/client';
 import { SnackbarProvider } from "notistack";
 import reportWebVitals from './reportWebVitals';
 import Navigation from './navigation/Navigation';
+import { AlertComponent } from './components/Alert';
 import { ThemeProvider } from '@mui/material/styles';
 import { UserProvider } from './contexts/UserContext';
 import { AlertProvier } from './contexts/AlertContext';
@@ -20,7 +21,9 @@ root.render(
     <ClientProvider>
       <UserProvider>
         <ThemeProvider theme={theme}>
-          <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "right" }} maxSnack={4} preventDuplicate dense>
+          <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "right" }} maxSnack={4} preventDuplicate content={(key, message) => (
+              <AlertComponent keyId={key} message={message}/>
+            )} dense>
             <AlertProvier>
               <Navigation/>
             </AlertProvier>

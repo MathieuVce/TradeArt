@@ -1,6 +1,6 @@
 import { IUser } from "../../../@types/IUser";
 import { Grid, TextField } from "@mui/material";
-import { checkTel, checkBank, checkCity, checkPostalCode } from "../../../utils/utils";
+import { checkTel, checkCity, checkPostalCode } from "../../../utils/utils";
 
 interface IUserSecondStepProps {
   detailsValues: IUser;
@@ -22,23 +22,8 @@ export const UserSecondStep: React.FC<IUserSecondStepProps> = ({ detailsValues, 
           name="phonenumber"
           onChange={(e) => handleChangeDetails('phonenumber', e.target.value)}
           value={detailsValues.phonenumber}
-          error={!checkTel(detailsValues.phonenumber)}
-          helperText={!checkTel(detailsValues.phonenumber) ? "Veuillez entrer un numéro de téléphone valide" : ' '}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          required
-          fullWidth
-          inputProps={{ maxLength: 16 }}
-          type="text"
-          id="credit_card_number"
-          label="Numéro carte bancaire"
-          name="credit_card_number"
-          onChange={(e) => handleChangeDetails('credit_card_number', e.target.value)}
-          value={detailsValues.credit_card_number}
-          error={!checkBank(detailsValues.credit_card_number)}
-          helperText={!checkBank(detailsValues.credit_card_number) ? "Veuillez entrer un numéro de carte bancaire valide" : ' '}
+          error={detailsValues.phonenumber ? !checkTel(detailsValues.phonenumber) : false}
+          helperText={detailsValues.phonenumber ? (!checkTel(detailsValues.phonenumber) ? "Veuillez entrer un numéro de téléphone valide" : '') : ''}
         />
       </Grid>
       <Grid item xs={12}>
@@ -63,8 +48,8 @@ export const UserSecondStep: React.FC<IUserSecondStepProps> = ({ detailsValues, 
           name="postalcode"
           onChange={(e) => handleChangeDetails('address', {...detailsValues.address, postalcode: e.target.value})}
           value={detailsValues.address.postalcode}
-          error={!checkPostalCode(detailsValues.address.postalcode)}
-          helperText={!checkPostalCode(detailsValues.address.postalcode) ? "Veuillez entrer un code postal valide" : ' '}
+          error={detailsValues.address.postalcode ? ! checkPostalCode(detailsValues.address.postalcode) : false}
+          helperText={detailsValues.address.postalcode ? (!checkPostalCode(detailsValues.address.postalcode) ? "Veuillez entrer un code postal valide" : '') : ''}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -76,8 +61,8 @@ export const UserSecondStep: React.FC<IUserSecondStepProps> = ({ detailsValues, 
           name="city"
           onChange={(e) => handleChangeDetails('address', {...detailsValues.address, city: e.target.value})}
           value={detailsValues.address.city}
-          error={!checkCity(detailsValues.address.city)}
-          helperText={!checkCity(detailsValues.address.city) ? "Veuillez entrer une ville valide" : ' '}
+          error={detailsValues.address.city ? !checkCity(detailsValues.address.city) : false}
+          helperText={detailsValues.address.city ? (!checkCity(detailsValues.address.city) ? "Veuillez entrer une ville valide" : '') : ''}
         />
       </Grid>
     </>

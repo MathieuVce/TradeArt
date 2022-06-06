@@ -48,7 +48,8 @@ const ArtistProfil: React.FunctionComponent = () => {
       !clientValues.cursus ||
       !clientValues.description ||
       !clientValues.photo ||
-      !clientValues.email
+      !clientValues.email ||
+      JSON.stringify(clientValues) === JSON.stringify(client)
     );
   }
 

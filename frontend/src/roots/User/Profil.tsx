@@ -36,8 +36,8 @@ const UserProfil: React.FunctionComponent = () => {
       !clientValues.lastname ||
       !clientValues.address ||
       !clientValues.phonenumber ||
-      !clientValues.credit_card_number ||
-      !clientValues.email
+      !clientValues.email ||
+      JSON.stringify(clientValues) === JSON.stringify(user)
     );
   }
 

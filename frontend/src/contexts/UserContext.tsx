@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
-import { IUser, IRegisterU } from "../@types/IUser";
+import { IUser, IRegisterU, ICreateOrder } from "../@types/IUser";
 import { IAuth, IPassword } from "../@types/IClient";
-import { IUserContext, defaultUserValue, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC, TUpdateFC, TGetWorksFC } from "../@types/IUserContext";
+import { IUserContext, defaultUserValue, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC, TUpdateFC, TGetWorksFC, TCreateOrderFC } from "../@types/IUserContext";
 import { formatDate } from "../utils/utils";
 
 export const UserContext = createContext<IUserContext>(defaultUserValue);
@@ -40,9 +40,9 @@ export const UserProvider: React.FC<any> = ({ children }) => {
       console.log(data.data);
       if (data.status === 'success') {
         const address = {
-          address: data.data[4].split(', ')[0],
-          postalcode: data.data[4].split(',' )[1],
-          city: data.data[4].split(', ')[2]
+          address: data.data[4].split('& ')[0],
+          postalcode: data.data[4].split('& ' )[1],
+          city: data.data[4].split('& ')[2]
         };
         setUser({
         user: true,
@@ -75,7 +75,7 @@ export const UserProvider: React.FC<any> = ({ children }) => {
     const response = await postData('register_customer', 
     {
       ...payload.details,
-      address: Object.values(payload.details.address).join(', '),
+      address: Object.values(payload.details.address).join('& '),
       ...payload.login,
       username: 'Username'
     });
@@ -117,11 +117,21 @@ export const UserProvider: React.FC<any> = ({ children }) => {
     try {
       const response = await putData('update_customer', {
         ...payload,
-        address: Object.values(payload.address).join(', '),
+        address: Object.values(payload.address).join('& '),
         username: 'username'
       });
       const data = await response.json();
       setUser(payload);
+      return {status: data.status, message: data.message};
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  const createOrder: TCreateOrderFC = async (payload: ICreateOrder) => {
+    try {
+      const response = await postData('create_order', payload);
+      const data = await response.json();
       return {status: data.status, message: data.message};
     } catch (error) {
       console.log(error)
@@ -133,7 +143,7 @@ export const UserProvider: React.FC<any> = ({ children }) => {
     <UserContext.Provider value={{
         user, autologU,
         loginU, registerU, resetPasswordU, logoutU,
-        updateU, getWorks
+        updateU, getWorks, createOrder
     }}>
         {children}
     </UserContext.Provider>

@@ -84,7 +84,6 @@ export const Auth: React.FC<IAuthProps> = ({ type, values, children }) => {
             !registerValues.details.lastname ||
             !registerValues.details.address ||
             !registerValues.details.phonenumber ||
-            !registerValues.details.credit_card_number ||
             !registerValues.login.email
           );
         } else {

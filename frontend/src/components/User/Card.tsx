@@ -1,17 +1,21 @@
 import { useState } from "react";
-import { IWork } from "../../@types/IClient";
+import { IClient, IWork } from "../../@types/IClient";
+import { IPaymentValues } from "../../@types/IUser";
 import { ExpandMore, Transition, stringAvatar, stringToColor } from "../../utils/utils";
 import { ExpandMore as ExpandMoreIcon, AddShoppingCartRounded } from "@mui/icons-material";
-import { Grid, Card, CardHeader, Avatar, IconButton, CardMedia, CardContent, Typography, Collapse, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import { PaymentForm } from "./Paiement";
+import { Grid, Card, CardHeader, Avatar, IconButton, CardMedia, CardContent, Typography, Collapse, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box } from "@mui/material";
+import { PaymentForm } from "./Payment";
 
 interface ICardComponentProps {
   work: IWork;
-  handleBuy: (key: number) => Promise<void>;
+  handleBuy: (work_id: number) => Promise<void>;
   isExpanding: boolean;
+  client: IClient;
+  paymentValues: IPaymentValues;
+  setPaymentValues: React.Dispatch<React.SetStateAction<IPaymentValues>>;
 }
 
-export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, isExpanding }) => {
+export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, isExpanding, paymentValues, setPaymentValues, client }) => {
   // const colors = ['#f0b93a', '#32a852', '#0eaab5', '#9b58d6'];
   // const randomColor = colors[Math.floor(Math.random() * colors.length)];
   const randomColor = stringToColor(work.title);
@@ -26,12 +30,11 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
     setOpen(!open);
   };
   return (
-     <Grid item xs={12} sm={6}>
+    <Grid item xs={12} sm={6}>
       <Card sx={{ minWidth: 275, mt: 2, boxShadow: 3 }}>
         <CardHeader
           avatar={
-            // <Avatar aria-label="art" {...stringAvatar(`${client.firstname} ${client.lastname}`)} src={client.photo === 'p' ? '' : client.photo}/>
-            <>OK</>
+            <Avatar aria-label="art" {...stringAvatar(`${client.firstname} ${client.lastname}`)} src={client.photo === 'p' ? '' : client.photo}/>
           }
           action={
             <Grid item>
@@ -45,7 +48,10 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
                   <ExpandMoreIcon style={{ color: color }} />
                 </ExpandMore>
               )}
-              <IconButton aria-label="settings" onClick={handleOpenClick}>
+              <IconButton aria-label="settings" onClick={() => {
+                handleOpenClick();
+                setPaymentValues({...paymentValues, amount: parseFloat(work.price)});
+              }}>
                 <AddShoppingCartRounded style={{ color: color }} />
               </IconButton>
             </Grid>
@@ -55,12 +61,20 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
           style={{ backgroundColor: randomColor, color: color }}
         /> 
         <Collapse in={isExpanding ? expanded : true} timeout="auto" unmountOnExit>
-          <CardMedia
-            component="img"
-            image={work.picture}
-            alt={work.title}
-            sx={{ borderBottom: '1px solid #eaeaea', opacity: work.sold ? 0.5 : 1 }}
-          />
+          {work.sold ? (
+            <Box sx={{ alignItems: 'center', justifyContent: 'center', minHeight: 16, width: '100%' }}>
+              <Typography variant="body1">
+                  Cet article n'est plus à vendre
+              </Typography>
+            </Box>
+          ) :(
+            <CardMedia
+              component="img"
+              image={work.picture}
+              alt={work.title}
+              sx={{ borderBottom: '1px solid #eaeaea', opacity: work.sold ? 0.5 : 1 }}
+            />  
+          )}
           <CardContent>
             <Typography variant="body2">
               {work.description}
@@ -83,7 +97,7 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
           <DialogContentText id="alert-dialog-slide-description">
             Entrez vos coordonées afin de procéder au paiement.
           </DialogContentText>
-          <PaymentForm/>
+          <PaymentForm work={work} paymentValues={paymentValues} setPaymentValues={setPaymentValues}/>
         </DialogContent>
         <DialogActions>
           <Button variant='outlined' onClick={handleOpenClick}>Retour</Button>
