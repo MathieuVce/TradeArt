@@ -3,7 +3,7 @@ import { IWork } from "../../@types/IClient";
 import { create_blob } from "../../utils/utils";
 import { EuroRounded } from '@mui/icons-material';
 import { IconTextField } from "../IconTextField";
-import { Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button, Box } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button, Box, Checkbox, FormControlLabel } from "@mui/material";
 
 interface IModalProps {
   open: boolean;
@@ -18,7 +18,8 @@ export const Modal: React.FC<IModalProps> = ({ open, setOpen, handleUpload }) =>
     price: '',
     description: '',
     evaluation: '',
-    picture: ''
+    picture: '',
+    info: false
   });
 
   const handleClose = () => {
@@ -28,12 +29,13 @@ export const Modal: React.FC<IModalProps> = ({ open, setOpen, handleUpload }) =>
       price: '',
       description: '',
       evaluation: '',
-      picture: ''
+      picture: '',
+      info: false
     });
     setImage('');
   };
 
-  const handleChangeWork = (prop: keyof typeof workValues, value: string | number) => {
+  const handleChangeWork = (prop: keyof typeof workValues, value: string | number | boolean) => {
     setCreateWork({
         ...workValues,
         [prop]: value
@@ -106,6 +108,14 @@ export const Modal: React.FC<IModalProps> = ({ open, setOpen, handleUpload }) =>
             iconEnd={<EuroRounded/>}
             error={parseFloat(workValues.price) <= 0}
             helperText={parseFloat(workValues.price) <= 0 ? 'Veuillez entrer un prix supérieur à 0' : ''}
+          />
+          <FormControlLabel
+            control={<Checkbox color="secondary" onChange={() => {
+              handleChangeWork("info", !workValues.info);
+            }}/>}
+            label={"Afficher mes infos ?"}
+            value={workValues.info}
+            checked={workValues.info}
           />
           {image && (
             <Box

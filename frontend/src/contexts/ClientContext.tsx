@@ -1,7 +1,7 @@
 import { formatDate } from "../utils/utils";
 import { createContext, useState } from "react";
 import { IAuth, IClient, IPassword, IRegister, IWork } from "../@types/IClient";
-import { defaultClientValue, IClientContext, TCreateWorkFC, TDeleteWorkFC, TGetWorkFC, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC, TUpdateFC } from "../@types/IClientContext";
+import { defaultClientValue, IClientContext, TCreateWorkFC, TDeleteWorkFC, TGetWorkFC, TLoginFC, TLogoutFC, TReceivePaymentFC, TRegisterFC, TResetPasswwordFC, TUpdateFC } from "../@types/IClientContext";
 
 export const ClientContext = createContext<IClientContext>(defaultClientValue);
 
@@ -10,10 +10,6 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
 
   const ip = 'http://localhost:8000/'
   
-  // const getData = async (url: string) => {
-  //   return await fetch(ip+url)
-  // };
-
   const postData = async (url: string, data: any) => {
     const requestOptions = {
       method: 'POST',
@@ -37,9 +33,9 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
       const data = await response.json();
       if (data.status === 'success') {
         const address = {
-          address: data.data[5].split(', ')[0],
-          postalcode: data.data[5].split(', ')[1],
-          city: data.data[5].split(', ')[2]
+          address: data.data[5].split('& ')[0],
+          postalcode: data.data[5].split('& ')[1],
+          city: data.data[5].split('& ')[2]
         };
 
         setUser({
@@ -77,7 +73,7 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
     const response = await postData('register_artist', 
     {
       ...payload.details,
-      address: Object.values(payload.details.address).join(', '),
+      address: Object.values(payload.details.address).join('& '),
       ...payload.login,
       username: 'Username'
     });
@@ -94,7 +90,8 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
 
   const logout: TLogoutFC = async () => {
     try {
-      const response = await putData('artist_log_out', {email: user?.email});
+      const tmpUser = localStorage.getItem('user');
+      const response = await putData('artist_log_out', {email: user?.email || JSON.parse(tmpUser!).email});
       const data = await response.json();
       setUser(null);
       localStorage.removeItem('user');
@@ -108,7 +105,7 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
     try {
       const response = await putData('update_artist', {
         ...payload,
-        address: Object.values(payload.address).join(', ')
+        address: Object.values(payload.address).join('& ')
       });
       const data = await response.json();
       setUser(payload);
@@ -119,7 +116,7 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
   };
 
   const createWork: TCreateWorkFC = async (payload: IWork) => {
-    const response = await postData('register_work', {...payload, email: user?.email, artist_id: user?.artist_id, price: parseFloat(payload.price)});
+    const response = await postData('register_work', {...payload, email: user?.email, artist_id: user?.artist_id, price: parseFloat(payload.price), info: payload.info ? 1 : 0});
     const data = await response.json();
     return {status: data.status, message: data.message, data: data.data};
   };
@@ -134,13 +131,19 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
     const response = await postData('delete_work', payload);
     const data = await response.json();
     return {status: data.status, message: data.message, data: data.data};
-};
+  };
+
+  const receivePayment: TReceivePaymentFC = async (artist_id: number) => {
+    const response = await postData('receive_payment', {artist_id});
+    const data = await response.json();
+    return {status: data.status, message: data.message, data: data.data};
+  };
 
   return (
     <ClientContext.Provider value={{
         client: user, autolog,
         login, register, resetPassword, logout, update,
-        getWork, createWork, deleteWork
+        getWork, createWork, deleteWork, receivePayment
     }}>
         {children}
     </ClientContext.Provider>

@@ -21,7 +21,6 @@ const ArtistWork: React.FunctionComponent = () => {
 
   const getWorkData = async () => {
     const response: IResponse = await getWork();
-    console.log(response);
     if (response.data?.length === 0) {
       Alerts[response.status]({message: response.message});
       setWorks(response.data);
@@ -34,7 +33,8 @@ const ArtistWork: React.FunctionComponent = () => {
           description: work[3],
           evaluation: work[4],
           picture: work[5],
-          sold: work[6] === 0 ? false : true
+          sold: work[6] === 0 ? false : true,
+          info: work[7] === 1 ? true : false
         }
       });
       const data: IWork[] = await Promise.all(promiseArray);
@@ -54,7 +54,7 @@ const ArtistWork: React.FunctionComponent = () => {
   };
 
   const handleUpload = async (workValues: IWork) => {
-    const res: IResponse = await createWork({...workValues, evaluation: '12/20'});
+    const res: IResponse = await createWork({...workValues, evaluation: '12/20', price: workValues.price.replace(',','.')});
     Alerts[res.status]({message: res.message});
     await getWorkData();
   }
@@ -104,7 +104,6 @@ const ArtistWork: React.FunctionComponent = () => {
         </Grid> 
       ) : (
         <>
-          {/* <Grid container columnSpacing={2} rowSpacing={0} justifyContent="space-evenly" alignItems="baseline" xs={12}> */}
           <Grid container columnSpacing={2} rowSpacing={0} justifyContent="space-evenly" alignItems="baseline">
             {works?.map((work, i) => (
               <CardComponent key={i} work={work} handleDelete={handleDelete} client={client!} isExpanding={expand}/>

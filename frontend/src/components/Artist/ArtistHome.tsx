@@ -1,5 +1,5 @@
-import { AppBarComponent } from './AppBar';
-import { DrawerComponent } from './Drawer';
+import { AppBarComponent } from '../AppBar';
+import { DrawerComponent } from '../Drawer';
 import { DrawerHeader } from '../../utils/utils';
 import { useLocation, Outlet } from 'react-router-dom';
 import { AlertContext } from '../../contexts/AlertContext';
@@ -35,7 +35,7 @@ export const ArtistHome: React.FC = () => {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBarComponent open={open} handleToggleDrawer={handleToggleDrawer} pages={pages}/>
-      <DrawerComponent open={open} handleToggleDrawer={handleToggleDrawer} pages={pages}/>
+      <DrawerComponent open={open} handleToggleDrawer={handleToggleDrawer} pages={pages} title={"Artist's Platform"}/>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {location.pathname === '/home' ? (

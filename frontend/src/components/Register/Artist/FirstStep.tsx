@@ -51,8 +51,8 @@ export const ArtistFirstStep: React.FC<IArtistFirstStepProps> = ({  authValues, 
           label="Addresse E-mail"
           name="email"
           autoComplete="email"
-          error={!checkEmail(authValues.email)}
-          helperText={!checkEmail(authValues.email) ? "Veuillez suivre le format d'email: exemple@exemple.com" : ''}
+          error={authValues.email ? !checkEmail(authValues.email) : false}
+          helperText={authValues.email ? (!checkEmail(authValues.email) ? "Veuillez suivre le format d'email: exemple@exemple.com" : '') : ''}
           onChange={(e) => handleChangeAuth('email', e.target.value)}
           value={authValues.email}
         />
@@ -71,8 +71,8 @@ export const ArtistFirstStep: React.FC<IArtistFirstStepProps> = ({  authValues, 
         onChange={(e: { target: { value: string; }; }) => handleChangeAuth('password', e.target.value)}
         iconEnd={visible ? <VisibilityOffRounded/> : <VisibilityRounded/>}
         onIconClick={() => setVisible(!visible)}
-        error={!checkPassword(authValues.password)}
-        helperText={!checkPassword(authValues.password) ? "Votre mot de passe doit contenir au moins 6 caractères, une lettre majuscule et un chiffre. Pas d'accent ni de caractère spécial." : ' '}
+        error={authValues.password ? !checkPassword(authValues.password) : false}
+        helperText={authValues.password ? (!checkPassword(authValues.password) ? "Votre mot de passe doit contenir au moins 6 caractères, une lettre majuscule et un chiffre. Pas d'accent ni de caractère spécial." : '') : ''}
         value={authValues.password}
       />
       </Grid>
@@ -87,8 +87,8 @@ export const ArtistFirstStep: React.FC<IArtistFirstStepProps> = ({  authValues, 
             shrink: true,
           }}
           onChange={(e) => handleChangeDetails('birthdate', e.target.value)}
-          error={!checkBirthDate(detailsValues.birthdate)}
-          helperText={!checkBirthDate(detailsValues.birthdate) ? "Vous devez avoir au moins 18 ans" : ' '}
+          error={detailsValues.birthdate ? !checkBirthDate(detailsValues.birthdate) : false}
+          helperText={detailsValues.birthdate ? (!checkBirthDate(detailsValues.birthdate) ? "Vous devez avoir au moins 18 ans" : '') : ''}
           value={detailsValues.birthdate}
         />
       </Grid>

@@ -33,7 +33,7 @@ const App: React.FunctionComponent = () => {
             </Typography>
           } />
       </Grid>
-      <Container component="main" maxWidth="xs" sx={{ mt: { xs: 4, sm: 6, md: 8, lg: 10 }}}>
+      <Container component="main" maxWidth="sm" sx={{ mt: { xs: 4, sm: 6, md: 8, lg: 10 }}}>
         <CssBaseline/>
         <Outlet context={{ user }}/>
       </Container>

@@ -22,8 +22,8 @@ export const ArtistSecondStep: React.FC<IArtistSecondStepProps> = ({ detailsValu
           name="phonenumber"
           onChange={(e) => handleChangeDetails('phonenumber', e.target.value)}
           value={detailsValues.phonenumber}
-          error={!checkTel(detailsValues.phonenumber)}
-          helperText={!checkTel(detailsValues.phonenumber) ? "Veuillez entrer un numéro de téléphone valide" : ' '}
+          error={detailsValues.phonenumber ? !checkTel(detailsValues.phonenumber) : false}
+          helperText={detailsValues.phonenumber ? (!checkTel(detailsValues.phonenumber) ? "Veuillez entrer un numéro de téléphone valide" : '') : ''}
         />
       </Grid>
       <Grid item xs={12}>
@@ -37,8 +37,8 @@ export const ArtistSecondStep: React.FC<IArtistSecondStepProps> = ({ detailsValu
           name="bank_account_number"
           onChange={(e) => handleChangeDetails('bank_account_number', e.target.value)}
           value={detailsValues.bank_account_number}
-          error={!checkBank(detailsValues.bank_account_number)}
-          helperText={!checkBank(detailsValues.bank_account_number) ? "Veuillez entrer un numéro de compte bancaire valide" : ' '}
+          error={detailsValues.bank_account_number ? !checkBank(detailsValues.bank_account_number) : false}
+          helperText={detailsValues.bank_account_number ? (!checkBank(detailsValues.bank_account_number) ? "Veuillez entrer un numéro de compte bancaire valide" : '') : ''}
         />
       </Grid>
       <Grid item xs={12}>
@@ -63,8 +63,8 @@ export const ArtistSecondStep: React.FC<IArtistSecondStepProps> = ({ detailsValu
           name="postalcode"
           onChange={(e) => handleChangeDetails('address', {...detailsValues.address, postalcode: e.target.value})}
           value={detailsValues.address.postalcode}
-          error={!checkPostalCode(detailsValues.address.postalcode)}
-          helperText={!checkPostalCode(detailsValues.address.postalcode) ? "Veuillez entrer un code postal valide" : ' '}
+          error={detailsValues.address.postalcode ? !checkPostalCode(detailsValues.address.postalcode) : false}
+          helperText={detailsValues.address.postalcode ? (!checkPostalCode(detailsValues.address.postalcode) ? "Veuillez entrer un code postal valide" : '') : ''}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -76,8 +76,8 @@ export const ArtistSecondStep: React.FC<IArtistSecondStepProps> = ({ detailsValu
           name="city"
           onChange={(e) => handleChangeDetails('address', {...detailsValues.address, city: e.target.value})}
           value={detailsValues.address.city}
-          error={!checkCity(detailsValues.address.city)}
-          helperText={!checkCity(detailsValues.address.city) ? "Veuillez entrer une ville valide" : ' '}
+          error={detailsValues.address.city ? !checkCity(detailsValues.address.city) : false}
+          helperText={detailsValues.address.city ? (!checkCity(detailsValues.address.city) ? "Veuillez entrer une ville valide" : '') : ''}
         />
       </Grid>
     </>

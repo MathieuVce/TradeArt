@@ -12,6 +12,7 @@ export interface IClientContext {
   deleteWork: TDeleteWorkFC;
   createWork: TCreateWorkFC;
   resetPassword: TResetPasswwordFC;
+  receivePayment: TReceivePaymentFC;
 };
 
 export type TLogoutFC = () => Promise<any>;
@@ -21,6 +22,7 @@ export type TLoginFC = (payload: IAuth) => Promise<any>;
 export type TCreateWorkFC = (work: IWork) => Promise<any>;
 export type TUpdateFC = (payload: IClient) => Promise<any>;
 export type TRegisterFC = (payload: IRegister) => Promise<any>;
+export type TReceivePaymentFC = (artist_id: number) => Promise<any>;
 export type TResetPasswwordFC = (payload: IPassword) => Promise<any>;
 export type TDeleteWorkFC = (payload: {work_id: number}) => Promise<any>;
 
@@ -36,4 +38,5 @@ export const defaultClientValue: IClientContext = {
   deleteWork: () => Promise.reject(null),
   createWork: () => Promise.reject(null),
   resetPassword: () => Promise.reject(null),
+  receivePayment: () => Promise.reject(null),
 };

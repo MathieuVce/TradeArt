@@ -22,6 +22,7 @@ export interface IClient {
   cursus?: string;
   description?: string;
   photo?: string;
+  info?: boolean;
 };
 
 export interface IAuth {
@@ -54,5 +55,6 @@ export interface IWork {
   evaluation: string;
   picture?: string;
   sold?: boolean;
-  artist_id?: number;
+  artist?: IClient;
+  info: boolean;
 }

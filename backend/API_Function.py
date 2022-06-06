@@ -55,7 +55,7 @@ async def register_customer(payload: Request):
     customer = dbase.execute('''SELECT * FROM customer WHERE email = "{email}"'''.format(email=str(values_dict["email"]).lower())).fetchall()
 
     if len(customer)==0:
-        dbase.execute('''INSERT INTO customer(firstname,lastname,username,address,birthdate,credit_card_number,email,phonenumber,password,is_logged) VALUES(?,?,?,?,?,?,?,?,?,?)''', (str(values_dict["firstname"]).capitalize(), str(values_dict["lastname"]).capitalize(), str(values_dict['username']), str(values_dict["address"]), str(values_dict["birthdate"]), str(values_dict["credit_card_number"]), str(values_dict["email"]).lower(), str(values_dict["phonenumber"]), str(values_dict["password"]), int(0)) )
+        dbase.execute('''INSERT INTO customer(firstname,lastname,username,address,birthdate,email,phonenumber,password,is_logged) VALUES(?,?,?,?,?,?,?,?,?)''', (str(values_dict["firstname"]).capitalize(), str(values_dict["lastname"]).capitalize(), str(values_dict['username']), str(values_dict["address"]), str(values_dict["birthdate"]), str(values_dict["email"]).lower(), str(values_dict["phonenumber"]), str(values_dict["password"]), int(0)) )
         message = 'Inscription réussie'
         status = 'success'
     else: 
@@ -136,8 +136,8 @@ async def customer_log_out(payload: Request):
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
 
     dbase.execute('''UPDATE customer SET is_logged = 0  WHERE email = "{email}" '''.format(email= str(values_dict['email']).lower()))
-    message = 'Utilisateur déconnecté'
-    status = 'success'
+    message = 'À bientot chez TradeArt !'
+    status = 'info'
 
     dbase.close()    
     return {'message':message , 'status': status }
@@ -213,24 +213,20 @@ async def update_customer(payload: Request):
     logverif=dbase.execute('''SELECT is_logged from customer WHERE customer_id = "{customer_id}" '''.format(customer_id= int(values_dict['customer_id']))).fetchall()
     message = ''
     status =''
-    user = []
     
     if int(logverif[0][0]) == 0:
         message = "Utilisateur non connecté"
         status = 'error'
-
     else:
-        list = dbase.execute('''SELECT * FROM customer WHERE email ="{email}"'''.format(email=str(values_dict['email']).lower())).fetchall()
-        if len(list)==0:
-            dbase.execute('''UPDATE customer SET firstname = "{firstname}" , lastname ="{lastname}" , username = "{username}", address = "{address}", birthdate = "{birthdate}" , credit_card_number = "{credit_card_number}", email = "{email}", phonenumber="{phonenumber}" ,password ="{password}" WHERE customer_id = "{customer_id}"'''.format(firstname=str(values_dict['firstname']).capitalize(),lastname=str(values_dict['lastname']).capitalize(),username=str(values_dict['username']),address=str(values_dict['address']),birthdate=str(values_dict['birthdate']),credit_card_number=str(values_dict['credit_card_number']),email=str(values_dict['email']).lower(), phonenumber=str(values_dict['phonenumber']), password=str(values_dict["password"]), customer_id=int(values_dict["customer_id"])))
+        try:
+            dbase.execute('''UPDATE customer SET firstname = "{firstname}" , lastname ="{lastname}" , username = "{username}", address = "{address}", birthdate = "{birthdate}" , email = "{email}", phonenumber="{phonenumber}" WHERE customer_id = "{customer_id}"'''.format(firstname=str(values_dict['firstname']).capitalize(),lastname=str(values_dict['lastname']).capitalize(),username=str(values_dict['username']),address=str(values_dict['address']),birthdate=str(values_dict['birthdate']),email=str(values_dict['email']).lower(), phonenumber=str(values_dict['phonenumber']), customer_id=int(values_dict["customer_id"])))
             message= "Données mises à jour"
             status = 'success'
-            user = dbase.execute('''SELECT * FROM customer WHERE email = "{email}"'''.format(email=str(values_dict['email']).lower()))
-        else : 
-            message = 'Email déjà existant'
-            status = 'error'
+        except:
+            message= "Erreur lors de la mise à jour du profil."
+            status='error'
     dbase.close()
-    return {'message': message, 'status': status, 'data':user}
+    return {'message': message, 'status': status}
 
 ###########
 
@@ -251,7 +247,7 @@ async def register_work(payload: Request):
 
     else:
         try: 
-            dbase.execute('''INSERT INTO artwork(title,price,description,evaluation,picture,sold,artist_id) VALUES(?,?,?,?,?,?,?) ''', (str(values_dict['title']), float(values_dict['price']), str(values_dict['description']),str(values_dict['evaluation']), str(values_dict['picture']),int(0),int(values_dict['artist_id'])))
+            dbase.execute('''INSERT INTO artwork(title,price,description,evaluation,picture,sold,info,artist_id) VALUES(?,?,?,?,?,?,?,?) ''', (str(values_dict['title']), float(values_dict['price']), str(values_dict['description']),str(values_dict['evaluation']), str(values_dict['picture']),int(0),int(values_dict['info']),int(values_dict['artist_id'])))
             message = "Oeuvre publiée."
             status ='success'
         except:
@@ -282,13 +278,15 @@ async def delete_work(payload: Request):
     return {'message':message,'status':status}
 
 @app.get("/all_work")
-async def all_work(payload: Request):
-    values_dict = await payload.json()
-
+async def all_work():
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
+    data=[]
 
-    data = dbase.execute('''SELECT * FROM artwork''').fetchall()
-    status = 'success'
+    try:
+        data = dbase.execute('''SELECT * FROM artwork LEFT JOIN artist ON artist.artist_id = artwork.artist_id ''').fetchall()
+        status = 'success'
+    except:
+        status = 'error'
 
     dbase.close()
     return {'status':status, 'data':data}
@@ -311,7 +309,7 @@ async def check_yourwork(payload: Request):
     else:
         data = dbase.execute('''SELECT * FROM artwork WHERE artist_id = "{artist_id}"'''.format(artist_id=int(values_dict['artist_id']))).fetchall()
         status = 'success'
-        message: ''
+        message= ''
         if len(data) == 0:
             status = 'warning'
             message = 'Vous n\'avez pas encore d\'oeuvres'
@@ -321,13 +319,36 @@ async def check_yourwork(payload: Request):
 
 ##########################
 
+def testCard(creditnumber):
+    cardnumber=str(creditnumber)[:-1]
+    cardnumberindices = list(cardnumber)
+    cardnumberindices.reverse()
+    evenindices= cardnumberindices[0::2]
+    oddindices= cardnumberindices[1::2]
+
+    sumnb = 0 
+
+    for digit in oddindices:
+        sumnb += int(digit)
+
+    for digit in evenindices : 
+        double = int(digit)*2 
+        if double > 9 : 
+            double -= 9 
+        sumnb += double
+
+    sumnb += int(str(creditnumber[-1:]))
+
+    return sumnb % 10 == 0
+
+
 @app.post("/create_order")
 async def create_order(payload: Request): 
     values_dict = await payload.json()
 
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
 
-    logverif=dbase.execute('''SELECT is_logged from customer WHERE email = "{email}" '''.format(email=str(values_dict['email']).lower())).fetchall()
+    logverif=dbase.execute('''SELECT is_logged from customer WHERE customer_id = "{id}" '''.format(id=int(values_dict['customer_id']))).fetchall()
     message = ''
     status =''
     data=[]
@@ -335,29 +356,49 @@ async def create_order(payload: Request):
     if int(logverif[0][0]) == 0:
         message = "Utilisateur non connecté"
         status ='error'
-
     else: 
-        paymentdate = datetime.now()
-        customer_id= dbase.execute('''SELECT customer_id FROM customer WHERE email = "{email}" '''.format(email= str(values_dict['email']).lower())).fetchall()[0][0]
-        dbase.execute('''INSERT INTO command(orderdate,orderlocation,work_id,customer_id) VALUES(?,?,?,?) ''', (date(paymentdate), str(values_dict['orderlocation']), int(values_dict['work_id']), int(customer_id)))
-        dbase.execute(''' UPDATE artwork SET sold = 1  WHERE work_id = "{work_id}" '''.format(work_id= int(values_dict['work_id'])))
-        message = "Commande confirmée"
-        status = 'success'
+        try:
+            work= int(values_dict['work_id'])
+            customer=int(values_dict['customer_id'])
+            location = str(values_dict['orderlocation'])
+            price=float(values_dict['price'])
+            paymentdate=datetime.now()
 
-        price= dbase.execute('''SELECT price FROM artwork WHERE work_id ="{work_id}"'''.format(work_id=str(values_dict['work_id']))).fetchall()[0][0]
-        orderid = dbase.execute('''SELECT order_id FROM command WHERE work_id="{work_id}"'''.format(work_id=str(values_dict['work_id']))).fetchall()[0][0]
-        artistid = dbase.execute('''SELECT artist_id FROM artist LEFT JOIN artwork ON artist.artist_id = artwork.artist_id WHERE work_id ="{work_id}"'''.format(work_id=str(values_dict['work_id']))).fetchall()[0][0]
-    
-        pay_order(paymentdate,customer_id,artistid,orderid)
+            cardinfo=str(values_dict['credit_card_number'])  
+            creditnumber=str(cardinfo).split('&')[0]
+            
+            isValidCreditCard = testCard(creditnumber)
+            
+            if isValidCreditCard:
+
+                if int(values_dict['save']) == 1:
+                    await register_credit_card(cardinfo,customer)
+
+                dbase.execute('''INSERT INTO command(orderdate,orderlocation,work_id,customer_id) VALUES(?,?,?,?) ''', (str(paymentdate), location, work, customer))
+                dbase.execute(''' UPDATE artwork SET sold = 1  WHERE work_id = "{work_id}" '''.format(work_id= work))
+
+                orderid = dbase.execute('''SELECT order_id FROM command WHERE work_id="{work_id}"'''.format(work_id=work)).fetchall()[0][0]
+        
+                await pay_order(price,paymentdate,customer,int(values_dict['customer_id']),orderid)
+
+                message = "Commande confirmée"
+                status = 'success'
+
+            else: 
+                message='Carte de crédit invalide'
+                status = 'warning'
+        except:
+            message ='Commande erronée'
+            status ='error'
 
     dbase.close()
-    return {'message':message,'status':status,'data':data}
+    return {'message':message,'status':status}
 
-async def pay_order(paymentdate,customerid,artistid,orderid):
+async def pay_order(price,paymentdate,customerid,artistid,orderid):
 
     dbase=sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
 
-    dbase.execute('''INSERT INTO payment(payment_date,customer_id,artist_id,order_id) VALUES (?,?,?,?)''', ( date(paymentdate), int(customerid), int(artistid), int(orderid)))
+    dbase.execute('''INSERT INTO payment(amount,payment_date,customer_id,artist_id,order_id) VALUES (?,?,?,?,?)''', ( float(price),str(paymentdate), int(customerid), int(artistid), int(orderid)))
     dbase.close()
     
 ###############################################################
@@ -378,34 +419,52 @@ async def my_purchase(payload: Request):
  ##########################################"
     
 
-@app.get("/received_payment")
+
+async def register_credit_card(cardinfo,customer): 
+
+    dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
+    dbase.execute('''UPDATE customer SET credit_card_number = '{credit_card}' WHERE customer_id = '{customer_id}' '''.format(credit_card= cardinfo, customer_id = customer))
+    dbase.close()
+
+
+@app.get("/my_purchase")
+async def my_purchase(payload: Request):
+    values_dict = await payload.json()
+
+    dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
+    try:
+        data = dbase.execute('''SELECT * FROM artwork LEFT JOIN command ON artwork.work_id = command.work_id WHERE customer_id= "{customer_id}"'''.format(customer_id=int(values_dict['customer_id']))).fetchall()
+        status = 'success'
+        message = 'Mes achats'
+    except:
+        status ='error'
+    dbase.close()
+
+@app.post("/received_payment")
 async def received_payment(payload: Request):
     values_dict = await payload.json()
 
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
     logverif=dbase.execute('''SELECT is_logged FROM artist WHERE artist_id = "{artist_id}" '''.format(artist_id=int(values_dict['artist_id']))).fetchall()
-    newdict = []
+    message = ''
+    data =[]
 
     if int(logverif[0][0]) == 0:
-        newdict.append("Utilisateur non connecté")
+        message="Utilisateur non connecté"
+        status='warning'
 
     else:
-        paymentdone=dbase.execute('''SELECT * FROM payment WHERE artist_id = "{artist_id}"'''.format(artist_id=int(values_dict['artist_id'])))
-        for pay in paymentdone :
-            amount=dbase.exevcute('''SELECT price FROM artwork LEFT JOIN command ON artwork.work_id = command.work_id LEFT JOIN payment ON command.order_id = payment.order_id WHERE payment.artist_id = "{artist_id}"'''.format(artist_id=int(values_dict['artist_id'])))
-            newdict.append("Order_ID: "+str(paymentdone[4]))
-            newdict.append("Payment date: " + str(paymentdone[1])) 
-            newdict.append("Amount: " + str(amount))
-            total= 0
-            for paid in amount : 
-                total += float(amount)
-            newdict.insert(0, 'Total revenue : '+ str(total) +'€' )
-  
-        if len(newdict) ==0 : 
-            newdict.append("No payments received")
-    
+        try:
+            data=dbase.execute('''SELECT * FROM payment WHERE artist_id = "{artist_id}"'''.format(artist_id=int(values_dict['artist_id'])))
+            message ='Vos payements'
+            status = 'success'
+        except :
+            message = 'Aucun payement reçu' 
+            status ='error'
+
     dbase.close()
-    return newdict
+    return {'message': message , 'status' : status, 'data' : data}
+    
 
 #######################
 @app.on_event("shutdown")

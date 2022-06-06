@@ -19,7 +19,7 @@ export const AlertProvier: React.FC = ({ children }) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const handleClickWithAction = useCallback((alert: IAlert, type: VariantType) => {
-    enqueueSnackbar(alert.message as SnackbarMessage, {
+    enqueueSnackbar(`${alert.message}/${type}` as SnackbarMessage, {
         variant: type,
         autoHideDuration: alert.duration || 5000,
         action: (key) => (

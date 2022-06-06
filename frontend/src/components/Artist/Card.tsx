@@ -26,8 +26,7 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleDelet
     setOpen(!open);
   };
   return (
-    // <Grid item>
-     <Grid item xs={12} sm={6}>
+     <Grid item xs={6} sm={3}>
       <Card sx={{ minWidth: 275, mt: 2, boxShadow: 3 }}>
         <CardHeader
           avatar={
@@ -62,11 +61,14 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleDelet
             sx={{ borderBottom: '1px solid #eaeaea' }}
           />
           <CardContent>
-            <Typography variant="body2">
+            <Typography variant="body1">
               {work.description}
             </Typography>
             <Typography variant="h4" fontSize={'bold'}>
               {work.price} €
+            </Typography>
+            <Typography variant="subtitle2" fontSize={'bold'} sx={{ color: 'grey', fontStyle: 'italic' }}>
+              {work.info ? 'Informations partagées' : 'Informations non partagées'}
             </Typography>
           </CardContent>
         </Collapse>

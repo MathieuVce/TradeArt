@@ -30,7 +30,7 @@ dbase.execute('''
         username TEXT NOT NULL, 
         address TEXT NOT NULL,
         birthdate DATE NOT NULL,
-        credit_card_number TEXT NOT NULL, 
+        credit_card_number TEXT, 
         email TEXT NOT NULL,
         phonenumber TEXT NOT NULL,
         password TEXT NOT NULL, 
@@ -46,6 +46,7 @@ dbase.execute('''
         evaluation TEXT NOT NULL,
         picture TEXT NOT NULL, 
         sold INTEGER NOT NULL,
+        info INTEGER NOT NULL,
         artist_id INTEGER NOT NULL,
         FOREIGN KEY(artist_id) REFERENCES artist(artist_id)
     ) ''')
@@ -54,7 +55,7 @@ dbase.execute('''
 dbase.execute('''
     CREATE TABLE IF NOT EXISTS command (
         order_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        orderdate DATE NOT NULL,
+        orderdate TEXT NOT NULL,
         orderlocation TEXT NOT NULL,
         work_id INTEGER NOT NULL,
         customer_id INTEGER NOT NULL,
@@ -65,8 +66,9 @@ dbase.execute('''
 
 dbase.execute('''
     CREATE TABLE IF NOT EXISTS payment (
-        payment_id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        payment_date DATE NOT NULL,
+        payment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        amount FLOAT NOT NULL,  
+        payment_date TEXT NOT NULL,
         customer_id INTEGER NOT NULL,
         artist_id INTEGER NOT NULL,
         order_id INTEGER NOT NULL,
