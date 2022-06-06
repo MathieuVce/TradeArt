@@ -359,6 +359,24 @@ async def pay_order(paymentdate,customerid,artistid,orderid):
 
     dbase.execute('''INSERT INTO payment(payment_date,customer_id,artist_id,order_id) VALUES (?,?,?,?)''', ( date(paymentdate), int(customerid), int(artistid), int(orderid)))
     dbase.close()
+    
+###############################################################
+@app.get("/my_purchase")
+async def my_purchase(payload: Request):
+    values_dict = await payload.json()
+
+    dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
+    try:
+        data = dbase.execute('''SELECT * FROM artwork LEFT JOIN command ON artwork.work_id = command.work_id WHERE customer_id= "{customer_id}"'''.format(customer_id=int(values_dict['customer_id']))).fetchall()
+        status = 'success'
+        message = 'Mes achats'
+    except:
+        status ='error'
+        message='Aucun achat'
+    dbase.close()
+    
+ ##########################################"
+    
 
 @app.get("/received_payment")
 async def received_payment(payload: Request):
