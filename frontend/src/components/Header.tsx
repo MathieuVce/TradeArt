@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
-import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
+// import logo from '../assets/logo.svg';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useNavigate } from 'react-router-dom';
 import  {Box, Menu, AppBar, Button, Toolbar, MenuItem, Container, IconButton, Typography } from '@mui/material';
@@ -18,7 +19,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <AppBar position="sticky">
+    <AppBar position="sticky" color='inherit'>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none', lg: 'none' }}}>
@@ -47,12 +48,12 @@ export const Header: React.FC = () => {
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }}}>
-              <Button color="inherit" component={Link} to="/login">Se connecter</Button>
-              <Button color="inherit" component={Link} to="/register">S'inscrire</Button>
+              <Button color="primary" component={Link} to="/login">Se connecter</Button>
+              <Button color="primary" component={Link} to="/register">S'inscrire</Button>
           </Box>
           <Box
             component='img'
-            sx={{ maxHeight: 80, height: 70, py: 0.5, mr: 2 }}
+            sx={{ maxHeight: 100, height: 90, py: 0.5, mr: 2 }}
             alt="logo"
             src={logo}
           />

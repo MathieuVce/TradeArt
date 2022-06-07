@@ -7,6 +7,7 @@ import { AlertContext } from '../../contexts/AlertContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, Typography, CssBaseline, IconProps } from '@mui/material';
 import { CameraRounded, HomeRounded, AccountBoxRounded, MonetizationOnRounded } from '@mui/icons-material';
+import UserImage from '../../assets/user.jpg';
 
 
 
@@ -32,7 +33,7 @@ export const UserHome: React.FC = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', backgroundColor: '#e6f7ff', minWidth: '100%', height: '100%', minHeight: '100vh'}}>
       <CssBaseline />
       <AppBarComponent open={open} handleToggleDrawer={handleToggleDrawer} pages={pages}/>
       <DrawerComponent open={open} handleToggleDrawer={handleToggleDrawer} pages={pages} title={"Customer's Platform"}/>

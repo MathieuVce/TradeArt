@@ -10,10 +10,10 @@ import { Switch, IconButton, IconButtonProps, Slide, Avatar } from '@mui/materia
 export const theme = createTheme({
   palette: {
     primary: {
-      main: '#115571',
+      main: '#002E82',
     },
     secondary: {
-      main: '#31AFB4',
+      main: '#73ccff',
     },
   },
   breakpoints: {
@@ -95,12 +95,12 @@ export const MaterialUISwitch = styled(Switch)(({ theme }) => ({
       },
       '& + .MuiSwitch-track': {
         opacity: 1,
-        backgroundColor: theme.palette.mode === 'dark' ? '#115571' : '#31AFB4',
+        backgroundColor: theme.palette.mode === 'dark' ? '#002E82' : '#73ccff',
       },
     },
   },
   '& .MuiSwitch-thumb': {
-    backgroundColor: theme.palette.mode === 'dark' ? '#31AFB4' : '#115571',
+    backgroundColor: theme.palette.mode === 'dark' ? '#73ccff' : '#002E82',
     width: 36,
     height: 36,
     '&:before': {
@@ -117,7 +117,7 @@ export const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
   '& .MuiSwitch-track': {
     opacity: 1,
-    backgroundColor: theme.palette.mode === 'dark' ? '#115571' : '#31AFB4',
+    backgroundColor: theme.palette.mode === 'dark' ? '#002E82' : '#73ccff',
     borderRadius: 20 / 2,
   },
 }));
@@ -244,10 +244,11 @@ export const stringToColor = (string: string) => {
 export const stringAvatar = (name: string, size?: number) => {
   return {
     sx: {
-      bgcolor: '#115571',
+      bgcolor: '#002E82',
       boxShadow: 2,
       height: size || 50,
-      width: size || 50
+      width: size || 50,
+      position: 'sticky'
     },
     children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
   };
@@ -258,3 +259,10 @@ export const SmallAvatar = styled(Avatar)(({ theme }) => ({
   height: 35,
   border: `2px solid ${theme.palette.background.paper}`,
 }));
+
+export const Img = styled('img')({
+  margin: 'auto',
+  display: 'block',
+  maxWidth: '100%',
+  maxHeight: '100%',
+});

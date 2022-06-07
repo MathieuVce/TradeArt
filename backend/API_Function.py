@@ -257,7 +257,7 @@ async def register_work(payload: Request):
     dbase.close()
     return {'message':message,'status':status}
 
-@app.post("/delete_work")
+@app.post("/delete_work") #AJOUTER DELETE EVERYTHING LINKED TO ARTWORK (COMMAND PAYMENT ETC..._)
 async def delete_work(payload: Request): 
     values_dict = await payload.json()
 
@@ -283,7 +283,7 @@ async def all_work():
     data=[]
 
     try:
-        data = dbase.execute('''SELECT * FROM artwork LEFT JOIN artist ON artist.artist_id = artwork.artist_id ''').fetchall()
+        data = dbase.execute('''SELECT * FROM artwork LEFT JOIN artist ON artist.artist_id = artwork.artist_id ORDER BY sold ASC ''').fetchall()
         status = 'success'
     except:
         status = 'error'
@@ -307,7 +307,7 @@ async def check_yourwork(payload: Request):
         status ='error'
         message = 'Vous devez être connecté pour voir vos oeuvres'
     else:
-        data = dbase.execute('''SELECT * FROM artwork WHERE artist_id = "{artist_id}"'''.format(artist_id=int(values_dict['artist_id']))).fetchall()
+        data = dbase.execute('''SELECT * FROM artwork WHERE artist_id = "{artist_id}" ORDER BY sold ASC'''.format(artist_id=int(values_dict['artist_id']))).fetchall()
         status = 'success'
         message= ''
         if len(data) == 0:
@@ -409,18 +409,27 @@ async def register_credit_card(cardinfo,customer):
     dbase.close()
 
 
-@app.get("/my_purchase")
-async def my_purchase(payload: Request):
+@app.post("/my_purchases")
+async def my_purchases(payload: Request):
     values_dict = await payload.json()
+    message = ''
+    status = ''
 
     dbase = sqlite3.connect('Trade_Art_Platform.db', isolation_level=None)
     try:
         data = dbase.execute('''SELECT * FROM artwork LEFT JOIN command ON artwork.work_id = command.work_id WHERE customer_id= "{customer_id}"'''.format(customer_id=int(values_dict['customer_id']))).fetchall()
-        status = 'success'
-        message = 'Mes achats'
+        if len(data)==0 :  
+            message ="Vous n'avez aucun achat"
+            status = 'warning'
+        else:
+            status = 'success'
+            message = 'Mes achats'
     except:
         status ='error'
     dbase.close()
+
+    return {'message': message , 'status' : status, 'data' : data}
+
 
 @app.post("/received_payment")
 async def received_payment(payload: Request):
@@ -437,10 +446,14 @@ async def received_payment(payload: Request):
 
     else:
         try:
-            data=dbase.execute('''SELECT * FROM payment WHERE artist_id = "{artist_id}"'''.format(artist_id=int(values_dict['artist_id'])))
-            message ='Vos payements'
-            status = 'success'
-        except :
+            data=dbase.execute('''SELECT * FROM payment LEFT JOIN command ON command.order_id = payment.order_id LEFT JOIN artwork ON artwork.work_id = command.work_id  WHERE artwork.artist_id = "{artist_id}"'''.format(artist_id=int(values_dict['artist_id']))).fetchall()
+            if len(data)==0 :  
+                message ="Vous n'avez aucune vente"
+                status = 'warning'
+            else:
+                message ='Vos payements'
+                status = 'success'
+        except:
             message = 'Aucun payement reçu' 
             status ='error'
 

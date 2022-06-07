@@ -25,6 +25,11 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
   
   useEffect(() => {
     handleChangePaymentValues('amount', work.price);
+    if (user?.credit_card_number) {
+      handleChangePaymentValues('ccnumber', user?.credit_card_number.split('&')[0]);
+      handleChangePaymentValues('ccexp', user?.credit_card_number.split('&')[1]);
+      handleChangePaymentValues('cccvc', user?.credit_card_number.split('&')[2]);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -32,15 +37,14 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
     <Grid container alignItems={'center'} justifyContent={'center'} spacing={2} paddingTop={2}>
       <Grid item xs={12} sm={9}>
         <TextField
-          label="Credit Card Number"
-          name="ccnumber"
+          label="Numéro de la carte"
+          name="card"
           variant="outlined"
           required
           fullWidth
-          InputLabelProps={{ shrink: true }}
           inputProps={{ maxLength: 16 }}
           onChange={(e) => handleChangePaymentValues('ccnumber', e.target.value)}
-          value={paymentValues.ccnumber}
+          value={user?.credit_card_number?.split('&')[0] ? user?.credit_card_number!.split('&')[0] : paymentValues.ccnumber}
         />
       </Grid>
       <Grid item xs={6} sm={3}>
@@ -60,9 +64,9 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
           variant="outlined"
           required
           fullWidth
-          InputLabelProps={{ shrink: true }}
           onChange={(e) => handleChangePaymentValues('ccexp', e.target.value)}
-          value={paymentValues.ccexp}
+          value={user?.credit_card_number?.split('&')[1] ? user?.credit_card_number!.split('&')[1] : paymentValues.ccexp}
+
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -71,9 +75,9 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
           name="cvc"
           variant="outlined"
           required
+          type={'password'}
           fullWidth
           inputProps={{ maxLength: 3 }}
-          InputLabelProps={{ shrink: true }}
           onChange={(e) => handleChangePaymentValues('cccvc', e.target.value)}
           value={paymentValues.cccvc}
         />
@@ -102,9 +106,9 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
           required
           fullWidth
           type="text"
-          id="address2"
+          id="address3"
           label="Adresse postale"
-          name="address2"
+          name="address3"
           onChange={(e) => handleChangePaymentValues('address', {...paymentValues.address, address: e.target.value})}
           value={paymentValues.address.address}
         />
@@ -117,9 +121,9 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
           required
           fullWidth
           inputProps={{ maxLength: 5 }}
-          id="postalcode2"
+          id="postalcode3"
           label="Code postal"
-          name="postalcode2"
+          name="postalcode3"
           onChange={(e) => handleChangePaymentValues('address', {...paymentValues.address, postalcode: e.target.value})}
           value={paymentValues.address.postalcode}
           error={!checkPostalCode(paymentValues.address.postalcode)}
@@ -133,9 +137,9 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
           }}
           required
           fullWidth
-          id="city2"
+          id="city3"
           label="Commune"
-          name="city2"
+          name="city3"
           onChange={(e) => handleChangePaymentValues('address', {...paymentValues.address, city: e.target.value})}
           value={paymentValues.address.city}
           error={paymentValues.address.city ? !checkCity(paymentValues.address.city) : false}

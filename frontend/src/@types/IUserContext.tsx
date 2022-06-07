@@ -11,6 +11,7 @@ export interface IUserContext {
   getWorks: TGetWorksFC;
   registerU: TRegisterFC;
   createOrder: TCreateOrderFC;
+  getPurchases: TGetPurchasesFC;
   resetPasswordU: TResetPasswwordFC;
 };
 
@@ -20,6 +21,7 @@ export type TGetWorksFC = () => Promise<any>;
 export type TLoginFC = (payload: IAuth) => Promise<any>;
 export type TUpdateFC = (payload: IUser) => Promise<any>;
 export type TRegisterFC = (payload: IRegisterU) => Promise<any>;
+export type TGetPurchasesFC = (customer_id: number) => Promise<any>;
 export type TCreateOrderFC = (payload: ICreateOrder) => Promise<any>;
 export type TResetPasswwordFC = (payload: IPassword) => Promise<any>;
 
@@ -34,5 +36,6 @@ export const defaultUserValue: IUserContext = {
   autologU: () => Promise.reject(null),
   registerU: () => Promise.reject(null),
   createOrder: () => Promise.reject(null),
+  getPurchases: () => Promise.reject(null),
   resetPasswordU: () => Promise.reject(null),
 };

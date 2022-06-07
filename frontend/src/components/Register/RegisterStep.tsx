@@ -42,12 +42,12 @@ export const RegisterStepper: React.FC<IRegisterStepperProps> = ({ stepsArray })
       })}
       <Grid container alignItems="center" justifyContent="center" maxWidth={'100%'} pt={4} columnGap={20}>
         <Grid item>
-          <IconButton sx={{ m: 1, bgcolor: 'primary.main', '&:hover': {background: "#31AFB4"}, '&:disabled': {background: "lightgrey"} }} onClick={() => prevStep()} disabled={currentStep === 0}>
+          <IconButton sx={{ m: 1, bgcolor: 'primary.main', '&:hover': {background: "#73ccff"}, '&:disabled': {background: "lightgrey"} }} onClick={() => prevStep()} disabled={currentStep === 0}>
             <ArrowLeftSharp style={{ color: 'white' }}/>
           </IconButton>
         </Grid>
         <Grid item>
-            <IconButton sx={{ m: 1, bgcolor: 'primary.main', '&:hover': {background: "#31AFB4"}, '&:disabled': {background: "lightgrey"} }} onClick={() => nextStep()} disabled={currentStep === (Object.keys(stepsArray).length - 1)}>
+            <IconButton sx={{ m: 1, bgcolor: 'primary.main', '&:hover': {background: "#73ccff"}, '&:disabled': {background: "lightgrey"} }} onClick={() => nextStep()} disabled={currentStep === (Object.keys(stepsArray).length - 1)}>
               <ArrowRightSharp style={{ color: 'white' }}/>
             </IconButton>
         </Grid>

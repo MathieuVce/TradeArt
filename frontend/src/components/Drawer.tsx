@@ -36,7 +36,7 @@ export const DrawerComponent: React.FC<IDrawerComponentProps> = ({ open, handleT
                 px: 2.5,
                 m: 1,
                 '&.Mui-selected': {
-                  backgroundColor: '#115571'
+                  backgroundColor: '#002E82'
                 },
                 borderRadius: '20px',
               }}

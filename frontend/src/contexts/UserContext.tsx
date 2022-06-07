@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import { IUser, IRegisterU, ICreateOrder } from "../@types/IUser";
 import { IAuth, IPassword } from "../@types/IClient";
-import { IUserContext, defaultUserValue, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC, TUpdateFC, TGetWorksFC, TCreateOrderFC } from "../@types/IUserContext";
+import { IUserContext, defaultUserValue, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC, TUpdateFC, TGetWorksFC, TCreateOrderFC, TGetPurchasesFC } from "../@types/IUserContext";
 import { formatDate } from "../utils/utils";
 
 export const UserContext = createContext<IUserContext>(defaultUserValue);
@@ -37,7 +37,6 @@ export const UserProvider: React.FC<any> = ({ children }) => {
     try {
       const response = await putData('customer_log_in', payload);
       const data = await response.json();
-      console.log(data.data);
       if (data.status === 'success') {
         const address = {
           address: data.data[4].split('& ')[0],
@@ -138,12 +137,22 @@ export const UserProvider: React.FC<any> = ({ children }) => {
     }
   };
 
+  const getPurchases: TGetPurchasesFC = async (customer_id: number) => {
+    try {
+      const response = await postData('my_purchases', {customer_id});
+      const data = await response.json();
+      return {status: data.status, message: data.message, data: data.data};
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
 
   return (
     <UserContext.Provider value={{
         user, autologU,
         loginU, registerU, resetPasswordU, logoutU,
-        updateU, getWorks, createOrder
+        updateU, getWorks, createOrder, getPurchases
     }}>
         {children}
     </UserContext.Provider>
