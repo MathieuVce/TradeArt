@@ -134,9 +134,16 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
   };
 
   const receivePayment: TReceivePaymentFC = async (artist_id: number) => {
-    const response = await postData('receive_payment', {artist_id});
-    const data = await response.json();
-    return {status: data.status, message: data.message, data: data.data};
+    try {
+
+      const response = await postData('received_payment', {artist_id});
+      const data = await response.json();
+      return {status: data.status, message: data.message, data: data.data};
+    } catch (error) {
+      console.log(error)
+      return {status:'error', message: 'Une erreur est survenue.'};
+
+    }
   };
 
   return (

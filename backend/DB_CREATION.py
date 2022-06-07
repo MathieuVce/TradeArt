@@ -39,7 +39,7 @@ dbase.execute('''
 
 dbase.execute('''
     CREATE TABLE IF NOT EXISTS artwork (
-        work_id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        work_id INTEGER PRIMARY KEY AUTOINCREMENT, 19
         title TEXT NOT NULL,
         price FLOAT NOT NULL,
         description TEXT NOT NULL,
@@ -47,14 +47,14 @@ dbase.execute('''
         picture TEXT NOT NULL, 
         sold INTEGER NOT NULL,
         info INTEGER NOT NULL,
-        artist_id INTEGER NOT NULL,
+        artist_id INTEGER NOT NULL,11
         FOREIGN KEY(artist_id) REFERENCES artist(artist_id)
     ) ''')
 
 
 dbase.execute('''
     CREATE TABLE IF NOT EXISTS command (
-        order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        order_id INTEGER PRIMARY KEY AUTOINCREMENT,10
         orderdate TEXT NOT NULL,
         orderlocation TEXT NOT NULL,
         work_id INTEGER NOT NULL,
@@ -66,12 +66,12 @@ dbase.execute('''
 
 dbase.execute('''
     CREATE TABLE IF NOT EXISTS payment (
-        payment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        payment_id INTEGER PRIMARY KEY AUTOINCREMENT,5
         amount FLOAT NOT NULL,  
         payment_date TEXT NOT NULL,
         customer_id INTEGER NOT NULL,
         artist_id INTEGER NOT NULL,
-        order_id INTEGER NOT NULL,
+        order_id INTEGER NOT NULL, 0
         FOREIGN KEY(customer_id) REFERENCES customer(customer_id),
         FOREIGN KEY(artist_id) REFERENCES artist(artist_id),
         FOREIGN KEY(order_id) REFERENCES command(order_id)

@@ -9,6 +9,7 @@ import { ClientContext } from "../contexts/ClientContext";
 import { useNavigate, Link, useOutletContext } from 'react-router-dom';
 import { IAuth, IPassword, IRegister, IResponse, TUser } from "../@types/IClient";
 import { LockOutlined, PersonRounded, LockOpenRounded, RotateLeftRounded } from '@mui/icons-material';
+import logo from '../assets/logorounded.png';
 import { Box, Grid, Avatar, IconProps, Checkbox, Typography, FormControlLabel, Button } from '@mui/material';
 
 interface IAuthProps {
@@ -126,10 +127,12 @@ export const Auth: React.FC<IAuthProps> = ({ type, values, children }) => {
         marginBottom: 12
       }}
     >
-      <Avatar sx={{ mt: 4, bgcolor: 'secondary.main' }}>
+      {/* <Avatar sx={{ mt: 4, bgcolor: 'secondary.main' }}>
         <LockOutlined/>
+      </Avatar> */}
+      <Avatar sx={{ mt: 4, ml: .5, bgcolor: 'secondary.main',  width: 95, height: 95, backgroundColor: 'inherit' }} src={logo}>
       </Avatar>
-      <Typography component="h1" variant="h5" sx={{ mb: 4, position: 'absolute', mt: 10 }}>
+      <Typography component="h1" variant="h5" sx={{ mb: 4, position: 'absolute', mt: 16 }}>
         {itemObj[type].info[0]}
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 12 }}>
@@ -145,7 +148,7 @@ export const Auth: React.FC<IAuthProps> = ({ type, values, children }) => {
                     <Typography variant="body1" color="textSecondary">
                       {itemObj[type].info[1].split('/')[0]}
                     </Typography>
-                    <Link to={itemObj[type].link?.split('&')[0]!} target="_blank" style={{ color: '#115571', paddingLeft: 5, paddingRight: 5 }}>
+                    <Link to={itemObj[type].link?.split('&')[0]!} target="_blank" style={{ color: '#002E82', paddingLeft: 5, paddingRight: 5 }}>
                       {itemObj[type].link?.split('&')[1]}
                     </Link>
                     <Typography variant="body1" color="textSecondary">
@@ -176,7 +179,7 @@ export const Auth: React.FC<IAuthProps> = ({ type, values, children }) => {
         <Grid container>
           <Grid item xs textAlign={'center'}>
             <Button variant='text' color='primary'sx={{ "&:hover": { backgroundColor: 'transparent' }, textAlign: 'right' }}>
-              <Link to={itemObj[type].info[3]} style={{ color: '#115571' }}>
+              <Link to={itemObj[type].info[3]} style={{ color: '#002E82' }}>
                 {itemObj[type].info[2]}
               </Link>
             </Button>

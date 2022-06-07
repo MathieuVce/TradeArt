@@ -1,5 +1,6 @@
 import { useContext } from 'react';
-import logo from '../assets/logo.svg';
+// import logo from '../assets/logo.svg';
+import logo from '../assets/logo.png';
 import { AppBar } from '../utils/utils';
 import { IResponse } from '../@types/IClient';
 import { UserContext } from '../contexts/UserContext';
@@ -30,7 +31,7 @@ export const AppBarComponent: React.FC<IAppBarComponentProps> = ({ open, handleT
   };
   
   return (
-    <AppBar position="fixed" open={open}>
+    <AppBar position="fixed" open={open} color='inherit'>
       <Toolbar>
         <IconButton
             color="inherit"
@@ -44,6 +45,7 @@ export const AppBarComponent: React.FC<IAppBarComponentProps> = ({ open, handleT
             <Menu />
         </IconButton>
         <Typography  justifySelf={'center'} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          {/* eslint-disable-next-line array-callback-return */}
           {Object.keys(pages).map((page, i) => {
             <Typography key={i} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
               {location.pathname === pages[page].link ? page : ''}
@@ -53,7 +55,7 @@ export const AppBarComponent: React.FC<IAppBarComponentProps> = ({ open, handleT
         </Typography>
         <Box
           component='img'
-          sx={{ maxHeight: 80, height: 70, py: 0.5, mr: 2 }}
+          sx={{ maxHeight: 75, height: 75, py: 0.5, mr: 2 }}
           alt="logo"
           src={logo}
         />

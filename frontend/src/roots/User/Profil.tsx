@@ -5,7 +5,7 @@ import { IResponse } from "../../@types/IClient";
 import { UserContext } from "../../contexts/UserContext";
 import { AlertContext } from "../../contexts/AlertContext";
 import { SettingsApplicationsRounded } from '@mui/icons-material';
-import { Grid, Box, Button, TextField, Container, Typography } from "@mui/material";
+import { Grid, Box, Button, TextField, Container, Typography, Paper } from "@mui/material";
 import { checkBirthDate, checkEmail, checkCity, checkPostalCode, checkTel } from "../../utils/utils";
 
 
@@ -43,12 +43,14 @@ const UserProfil: React.FunctionComponent = () => {
 
   return (
     <Container component="main" maxWidth="md">
-      <Box
+      <Grid
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          mt: 8
+          mt: 8,
+          rounded: 'mg',
+          padding: 7,
         }}
       >
         <Grid container spacing={2}>
@@ -189,7 +191,7 @@ const UserProfil: React.FunctionComponent = () => {
             </Grid>
           </Grid>
         </Grid>
-      </Box>    
+      </Grid>    
     </Container>
   );
 };

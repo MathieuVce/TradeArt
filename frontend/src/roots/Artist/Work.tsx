@@ -63,7 +63,7 @@ const ArtistWork: React.FunctionComponent = () => {
     <>
       <Grid container spacing={2} borderBottom={1} paddingBottom={2} borderColor='lightgrey'>
         <Grid item justifyContent='flex-start' sx={{ flexGrow: 1, alignSelf: 'center' }}>
-          <Typography variant="h4" textAlign={'start'} color='primary'>
+          <Typography variant="h4" textAlign={'start'} color='primary' fontWeight={600}>
             {works?.length ? (works?.length! === 1 ? `${works?.length} ŒUVRE` : `${works?.length} ŒUVRES`) : ""}
           </Typography>
         </Grid>
@@ -104,7 +104,7 @@ const ArtistWork: React.FunctionComponent = () => {
         </Grid> 
       ) : (
         <>
-          <Grid container columnSpacing={2} rowSpacing={0} justifyContent="space-evenly" alignItems="baseline">
+          <Grid container justifyContent="space-evenly" alignItems="baseline" sx={{ marginTop: 3 }} spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 4, sm: 6, md: 12 }}>
             {works?.map((work, i) => (
               <CardComponent key={i} work={work} handleDelete={handleDelete} client={client!} isExpanding={expand}/>
             ))}

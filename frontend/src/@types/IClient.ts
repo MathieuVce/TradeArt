@@ -58,3 +58,12 @@ export interface IWork {
   artist?: IClient;
   info: boolean;
 }
+
+export interface ICommand{
+  picture: string;
+  title: string;
+  price: number;
+  description: string;
+  order_date: Date;
+  order_location: string;
+}

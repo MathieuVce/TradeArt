@@ -54,7 +54,7 @@ const Login: React.FunctionComponent = () => {
       />
       <Grid item xs textAlign={'right'}>
         <Button variant='text' color='primary' sx={{ "&:hover": { backgroundColor: 'transparent' } }}>
-          <Link to='/password' style={{ color: '#115571' }}>
+          <Link to='/password' style={{ color: '#002E82' }}>
             Mot de passe oublié ?
           </Link>
         </Button>

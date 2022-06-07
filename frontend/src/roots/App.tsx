@@ -37,7 +37,7 @@ const App: React.FunctionComponent = () => {
         <CssBaseline/>
         <Outlet context={{ user }}/>
       </Container>
-      <Copyright sx={{ pt: 3, pl: 4, position: 'fixed', bottom: 0, backgroundColor: '#115571', width: '100%', height: 62 }}/>
+      <Copyright sx={{ pt: 3, pl: 4, position: 'fixed', bottom: 0, backgroundColor: '#002E82', width: '100%', height: 62 }}/>
     </>
   );
 };
