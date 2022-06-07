@@ -1,13 +1,16 @@
-import * as React from 'react';
+import React, { useState } from 'react';
+import { Modal } from "./Modal";
 import { Img } from '../utils/utils';
 import { ICommand } from '../@types/IClient';
-import {Typography, ButtonBase, Grid, Paper} from '@mui/material';
+import {Typography, ButtonBase, Grid, Paper, CardMedia} from '@mui/material';
 
 interface IModalProps {
   command: ICommand;
 }
 
 export const SaleCard: React.FC<IModalProps> = ({ command }) => {
+  const [popImg, setPopImg] = useState(false);
+
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Paper
@@ -23,8 +26,8 @@ export const SaleCard: React.FC<IModalProps> = ({ command }) => {
       >
         <Grid container spacing={2}>
           <Grid item>
-            <ButtonBase sx={{ width: 128, height: 128 }}>
-              <Img alt="complex" src={command.picture} sx={{ boxShadow: '2' }} />
+            <ButtonBase onClick={() => {setPopImg(true)}}>
+              <Img alt="complex" src={command.picture} sx={{ boxShadow: '2', height: 128 }} />
             </ButtonBase>
           </Grid>
           <Grid item xs={12} sm container>
@@ -49,6 +52,13 @@ export const SaleCard: React.FC<IModalProps> = ({ command }) => {
           </Grid>
         </Grid>
       </Paper>
+      <Modal info={true} buttonProps='OK' title={command.title} description={command.description} open={popImg} setOpen={setPopImg}>
+        <CardMedia
+          component="img"
+          image={command.picture}
+          alt={command.title}
+        />
+      </Modal>
     </Grid>
   );
 };

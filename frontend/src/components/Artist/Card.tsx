@@ -1,9 +1,9 @@
 import { Modal } from "../Modal";
 import { useState } from "react";
 import { IClient, IWork } from "../../@types/IClient";
-import { ExpandMore, Transition, stringAvatar, stringToColor } from "../../utils/utils";
+import { ExpandMore, Transition, stringAvatar } from "../../utils/utils";
 import { ExpandMore as ExpandMoreIcon, CloseRounded } from "@mui/icons-material";
-import { Grid, Card, CardHeader, Avatar, IconButton, CardMedia, CardContent, Typography, Collapse, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Grid, Card, CardHeader, Avatar, IconButton, CardMedia, Typography, Collapse, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 

@@ -6,7 +6,7 @@ import { AlertContext } from "../../contexts/AlertContext";
 import { ClientContext } from "../../contexts/ClientContext";
 import { CardComponent } from "../../components/Artist/Card";
 import { OpenInFullRounded, CloseFullscreenRounded } from '@mui/icons-material';
-import { Grid, Typography, Link, Button, FormControlLabel, Switch, Box } from "@mui/material";
+import { Grid, Typography, Link, Button, FormControlLabel, Switch, Box, CircularProgress } from "@mui/material";
 
 const ArtistWork: React.FunctionComponent = () => {
   const { client, getWork, createWork, deleteWork } = useContext(ClientContext);
@@ -14,6 +14,8 @@ const ArtistWork: React.FunctionComponent = () => {
   const [open, setOpen] = useState(false);
   const [expand, setExpand] = useState(true);
   const [works, setWorks] = useState<IWork[]>();
+  const [loading, setLoading] = useState(true);
+
 
   const handleOpen = () => {
     setOpen(!open);
@@ -43,20 +45,28 @@ const ArtistWork: React.FunctionComponent = () => {
   };
 
   useEffect(() => {
-    getWorkData();
+    (async () => {
+      setLoading(true);
+      await getWorkData();
+      setLoading(false);
+    })();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDelete = async (work_id: number) => {
+    setLoading(true);
     const response: IResponse = await deleteWork({work_id});
-    await getWorkData();
     Alerts[response.status]({message: response.message})
+    await getWorkData();
+    setLoading(false);
   };
 
   const handleUpload = async (workValues: IWork) => {
+    setLoading(true);
     const res: IResponse = await createWork({...workValues, evaluation: '12/20', price: workValues.price.replace(',','.')});
     Alerts[res.status]({message: res.message});
     await getWorkData();
+    setLoading(false);
   }
 
   return (
@@ -83,7 +93,7 @@ const ArtistWork: React.FunctionComponent = () => {
           </Button>
         </Grid>
       </Grid>
-      {works?.length === 0 ? (
+      {loading ? (
         <Grid
           container
           spacing={0}
@@ -92,23 +102,38 @@ const ArtistWork: React.FunctionComponent = () => {
           justifyContent="center"
           style={{ minHeight: '60vh' }}
         >
-          <Grid item xs={3}>
-            <Typography variant="h5" textAlign={'center'} color='primary'>
-              Vous n'avez pas encore d'œuvres {' '}
-              <Link underline='always' onClick={handleOpen}>
-                ajoutez-en une
-              </Link>
-              {' '} dès maintenant !
-            </Typography>
-          </Grid>   
-        </Grid> 
+          <CircularProgress color="secondary" />
+        </Grid>
       ) : (
         <>
-          <Grid container justifyContent="space-evenly" alignItems="baseline" sx={{ marginTop: 3 }} spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 4, sm: 6, md: 12 }}>
-            {works?.map((work, i) => (
-              <CardComponent key={i} work={work} handleDelete={handleDelete} client={client!} isExpanding={expand}/>
-            ))}
-          </Grid>
+          {!works ? (
+            <Grid
+              container
+              spacing={0}
+              direction="column"
+              alignItems="center"
+              justifyContent="center"
+              style={{ minHeight: '60vh' }}
+            >
+              <Grid item xs={3}>
+                <Typography variant="h5" textAlign={'center'} color='primary'>
+                  Vous n'avez pas encore d'œuvres {' '}
+                  <Link underline='always' onClick={handleOpen}>
+                    ajoutez-en une
+                  </Link>
+                  {' '} dès maintenant !
+                </Typography>
+              </Grid>   
+            </Grid> 
+          ) : (
+            <>
+              <Grid container justifyContent="space-evenly" alignItems="baseline" sx={{ marginTop: 3 }} spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 4, sm: 6, md: 12 }}>
+                {works?.map((work, i) => (
+                  <CardComponent key={i} work={work} handleDelete={handleDelete} client={client!} isExpanding={expand}/>
+                ))}
+              </Grid>
+            </>
+          )}
         </>
       )}
       <Modal open={open} setOpen={setOpen} handleUpload={handleUpload}/>

@@ -5,7 +5,7 @@ import { UserContext } from "../../contexts/UserContext";
 import { AlertContext } from "../../contexts/AlertContext";
 import { CardComponent } from "../../components/User/Card";
 import { OpenInFullRounded, CloseFullscreenRounded } from '@mui/icons-material';
-import { Grid, Typography, FormControlLabel, Switch, Box } from "@mui/material";
+import { Grid, Typography, FormControlLabel, Switch, Box, CircularProgress } from "@mui/material";
 
 
 const UserWorks: React.FunctionComponent = () => {
@@ -13,6 +13,8 @@ const UserWorks: React.FunctionComponent = () => {
   const { getWorks, user, createOrder } = useContext(UserContext);
   const [expand, setExpand] = useState(true);
   const [works, setWorks] = useState<IWork[]>();
+  const [loading, setLoading] = useState(true);
+
   const [paymentValues, setPaymentValues] = useState<IPaymentValues>({
     amount: 0,
     ccnumber: "",
@@ -57,6 +59,7 @@ const UserWorks: React.FunctionComponent = () => {
   };
 
   const handleBuy = async (work_id: number) => {
+    setLoading(true);
     const response: IResponse = await createOrder({
       credit_card_number: user?.credit_card_number ? `${user?.credit_card_number.split('&')[0]}&${user?.credit_card_number.split('&')[1]}&${user?.credit_card_number.split('&')[2]}` : `${paymentValues.ccnumber}&${paymentValues.ccexp}&${paymentValues.cccvc}`,
       work_id,
@@ -67,10 +70,15 @@ const UserWorks: React.FunctionComponent = () => {
     });
     Alerts[response.status]({message: response.message});
     await getWorkData();
+    setLoading(false);
   }
 
   useEffect(() => {
-    getWorkData();
+    (async () => {
+      setLoading(true);
+      await getWorkData();
+      setLoading(false);
+    })();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -92,7 +100,7 @@ const UserWorks: React.FunctionComponent = () => {
           </Box>
         </Grid>
       </Grid>
-      {works?.length === 0 ? (
+      {loading ? (
         <Grid
           container
           spacing={0}
@@ -101,18 +109,33 @@ const UserWorks: React.FunctionComponent = () => {
           justifyContent="center"
           style={{ minHeight: '60vh' }}
         >
-          <Grid item xs={3}>
-            <Typography variant="h5" textAlign={'center'} color='primary'>
-                Aucune œuvre à afficher...
-            </Typography>
-          </Grid>   
-        </Grid> 
-      ) : (
-        <Grid container justifyContent="space-evenly" alignItems="baseline" sx={{ marginTop: 3 }} spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 4, sm: 6, md: 12 }}>
-          {works?.map((work, i) => (
-            <CardComponent key={i} work={work} handleBuy={handleBuy} isExpanding={expand} client={work.artist!} paymentValues={paymentValues} setPaymentValues={setPaymentValues}/>
-          ))}
+          <CircularProgress color="secondary" />
         </Grid>
+      ) : (
+      <>
+        {!works ? (
+          <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            style={{ minHeight: '60vh' }}
+          >
+            <Grid item xs={3}>
+              <Typography variant="h5" textAlign={'center'} color='primary'>
+                  Aucune œuvre à afficher...
+              </Typography>
+            </Grid>   
+          </Grid> 
+        ) : (
+          <Grid container justifyContent="space-evenly" alignItems="baseline" sx={{ marginTop: 3 }} spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 4, sm: 6, md: 12 }}>
+            {works?.map((work, i) => (
+              <CardComponent key={i} work={work} handleBuy={handleBuy} isExpanding={expand} client={work.artist!} paymentValues={paymentValues} setPaymentValues={setPaymentValues}/>
+            ))}
+          </Grid>
+        )}
+      </>
       )}
     </>
   );
