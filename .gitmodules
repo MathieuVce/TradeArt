@@ -1,0 +1,3 @@
+[submodule "fast-api"]
+	path = fast-api
+	url = git@github.com:MathieuVce/fast-api.git
