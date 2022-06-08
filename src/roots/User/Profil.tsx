@@ -5,7 +5,7 @@ import { IResponse } from "../../@types/IClient";
 import { UserContext } from "../../contexts/UserContext";
 import { AlertContext } from "../../contexts/AlertContext";
 import { SettingsApplicationsRounded } from '@mui/icons-material';
-import { Grid, Box, Button, TextField, Container, Typography, Paper } from "@mui/material";
+import { Grid, Button, TextField, Container, Typography } from "@mui/material";
 import { checkBirthDate, checkEmail, checkCity, checkPostalCode, checkTel } from "../../utils/utils";
 
 

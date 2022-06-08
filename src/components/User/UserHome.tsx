@@ -7,7 +7,6 @@ import { AlertContext } from '../../contexts/AlertContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, Typography, CssBaseline, IconProps } from '@mui/material';
 import { CameraRounded, HomeRounded, AccountBoxRounded, MonetizationOnRounded } from '@mui/icons-material';
-import UserImage from '../../assets/user.jpg';
 
 
 

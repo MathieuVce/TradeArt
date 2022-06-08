@@ -8,7 +8,7 @@ import { AlertContext } from "../contexts/AlertContext";
 import { ClientContext } from "../contexts/ClientContext";
 import { useNavigate, Link, useOutletContext } from 'react-router-dom';
 import { IAuth, IPassword, IRegister, IResponse, TUser } from "../@types/IClient";
-import { LockOutlined, PersonRounded, LockOpenRounded, RotateLeftRounded } from '@mui/icons-material';
+import { PersonRounded, LockOpenRounded, RotateLeftRounded } from '@mui/icons-material';
 import logo from '../assets/logorounded.png';
 import { Box, Grid, Avatar, IconProps, Checkbox, Typography, FormControlLabel, Button } from '@mui/material';
 
