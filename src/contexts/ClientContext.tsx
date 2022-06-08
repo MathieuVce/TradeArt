@@ -8,7 +8,7 @@ export const ClientContext = createContext<IClientContext>(defaultClientValue);
 export const ClientProvider: React.FC<any> = ({ children }) => {
   const [user, setUser] = useState<null | IClient>(null);
 
-  const ip = 'https://tradeart.herokuapp.com/'
+  const ip = 'https://tradeartfastapi.herokuapp.com/'
   
   const postData = async (url: string, data: any) => {
     const requestOptions = {
