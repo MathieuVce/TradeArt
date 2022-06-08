@@ -35,7 +35,7 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
 
   return (
     <Grid container alignItems={'center'} justifyContent={'center'} spacing={2} paddingTop={2}>
-      <Grid item xs={12} sm={9}>
+      <Grid item xs={8} sm={9}>
         <TextField
           label="Numéro de la carte"
           name="card"
@@ -47,7 +47,7 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
           value={user?.credit_card_number?.split('&')[0] ? user?.credit_card_number!.split('&')[0] : paymentValues.ccnumber}
         />
       </Grid>
-      <Grid item xs={6} sm={3}>
+      <Grid item xs={4} sm={3}>
         <OutlinedInput
           label="Amount"
           name="amount"
@@ -57,7 +57,7 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
           endAdornment={<InputAdornment position="end">€</InputAdornment>}
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={6} sm={6}>
         <TextField
           label="Expiration Date"
           name="ccexp"
@@ -69,7 +69,7 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
 
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={6} sm={6}>
         <TextField
           label="CVC"
           name="cvc"
@@ -113,7 +113,7 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
           value={paymentValues.address.address}
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={6} sm={6}>
         <TextField
           InputProps={{
             readOnly: isSimilar,
@@ -130,7 +130,7 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
           helperText={!checkPostalCode(paymentValues.address.postalcode) ? "Veuillez entrer un code postal valide" : ''}
         />
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={6} sm={6}>
         <TextField
           InputProps={{
             readOnly: isSimilar,

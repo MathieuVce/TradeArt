@@ -5,7 +5,8 @@ import { UserContext } from "../../contexts/UserContext";
 import { AlertContext } from "../../contexts/AlertContext";
 import { CardComponent } from "../../components/User/Card";
 import { OpenInFullRounded, CloseFullscreenRounded } from '@mui/icons-material';
-import { Grid, Typography, FormControlLabel, Switch, Box, CircularProgress } from "@mui/material";
+import { Grid, Typography, FormControlLabel, Switch, Box, CircularProgress, Skeleton, Card, CardContent, CardHeader } from "@mui/material";
+import React from "react";
 
 
 const UserWorks: React.FunctionComponent = () => {
@@ -101,7 +102,9 @@ const UserWorks: React.FunctionComponent = () => {
         </Grid>
       </Grid>
       {loading ? (
-        <Grid
+        
+        <Grid container justifyContent="space-evenly" alignItems="baseline" sx={{ marginTop: 3 }} spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 4, sm: 6, md: 12 }}>
+        {/* <Grid
           container
           spacing={0}
           direction="column"
@@ -110,7 +113,35 @@ const UserWorks: React.FunctionComponent = () => {
           style={{ minHeight: '60vh' }}
         >
           <CircularProgress color="secondary" />
+          <Typography variant="h6" textAlign={'center'} color='primary' fontWeight={600}>
+            Chargement des œuvres
+          </Typography>
+        </Grid> */}
+          {Array.from(new Array(9)).map((_, i) => (
+            <Grid item xs={12} sm={6} md={4}>
+              <Card sx={{ mt: 2, boxShadow: 3 }}>
+                <CardHeader
+                  avatar={
+                    <Skeleton animation="wave" variant="circular" width={50} height={50} />
+                  }
+                  title={
+                    <Skeleton
+                      animation="wave"
+                      height={20}
+                      width="80%"
+                      style={{ marginBottom: 6 }}
+                    />
+                  }
+                  subheader={
+                    <Skeleton animation="wave" height={10} width="40%" />
+                  }
+                />
+                <Skeleton sx={{ height: 190 }} animation="wave" variant="rectangular" />
+              </Card>
+            </Grid>
+          ))}
         </Grid>
+
       ) : (
       <>
         {!works ? (

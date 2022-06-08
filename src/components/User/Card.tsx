@@ -88,7 +88,7 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
               <>
               { work.sold ? (
                 <>
-                  <Typography variant="h4">
+                  <Typography variant="h6">
                     ARTICLE VENDU
                   </Typography>
                 </>
