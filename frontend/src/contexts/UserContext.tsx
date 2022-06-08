@@ -9,7 +9,7 @@ export const UserContext = createContext<IUserContext>(defaultUserValue);
 export const UserProvider: React.FC<any> = ({ children }) => {
   const [user, setUser] = useState<null | IUser>(null);
 
-  const ip = 'http://localhost:8000/'
+  const ip = 'https://tradeart.herokuapp.com/'
   
   const fetchData = async (url: string) => {
     return await fetch(ip+url)
