@@ -33,13 +33,16 @@ export const SaleCard: React.FC<IModalProps> = ({ command }) => {
           <Grid item xs={12} sm container>
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
-                <Typography gutterBottom variant="subtitle1" component="div" fontWeight={300}>
+                <Typography gutterBottom variant="body2">
                   {command.title}
                 </Typography>
-                <Typography variant="body2" gutterBottom>
+                <Typography variant="subtitle1" gutterBottom component="div" fontWeight={300}>
                   {command.description}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" marginTop={3}>
+                  {command.order_date.toLocaleDateString()}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
                   {command.order_location.replaceAll('&', ', ')}
                 </Typography>
               </Grid>

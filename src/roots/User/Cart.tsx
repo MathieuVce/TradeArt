@@ -22,8 +22,8 @@ const UserCart: React.FunctionComponent = () => {
           title: item[1],
           price: parseFloat(item[2]),
           description: item[3],
-          order_date: new Date(item[10]),
-          order_location: item[11]
+          order_date: new Date(item[11]),
+          order_location: item[12]
         }
       });
       const data: ICommand[] = await Promise.all(promiseArray);
@@ -65,7 +65,7 @@ const UserCart: React.FunctionComponent = () => {
               direction="column"
               alignItems="center"
               justifyContent="center"
-              style={{ minHeight: '70vh' }}
+              style={{ minHeight: '80vh' }}
             >
               <Grid item xs={3}>
                 <Typography variant="h5" textAlign={'center'} color='primary'>

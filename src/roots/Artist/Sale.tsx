@@ -49,12 +49,12 @@ const ArtistSale: React.FunctionComponent = () => {
           direction="column"
           alignItems="center"
           justifyContent="center"
-          style={{ minHeight: '60vh' }}
+          style={{ minHeight: '80vh' }}
         >
           <CircularProgress color="secondary" />
-          <Typography variant="h5" textAlign={'center'} color='primary'>
-            Vous n'avez pas encore de ventes
-          </Typography>
+            <Typography variant="h5" textAlign={'center'} color='primary' fontWeight={700}>
+              Chargement de vos ventes...
+            </Typography>
         </Grid>
       ) : (
         <>
