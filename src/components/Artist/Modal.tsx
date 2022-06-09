@@ -103,12 +103,12 @@ export const Modal: React.FC<IModalProps> = ({ open, setOpen, handleUpload }) =>
             label="Prix"
             name="price"
             inputProps={{ maxLength: 10 }}
-            onChange={(e) => handleChangeWork('price', e.target.value)}
+            onChange={(e) => handleChangeWork('price', e.target.value.replaceAll(' ',''))}
             value={workValues.price}
             sx={{ mb: 2 }}
             iconEnd={<EuroRounded/>}
-            error={parseFloat(workValues.price) <= 0 || !checkIsNumber(workValues.price)}
-            helperText={(parseFloat(workValues.price) <= 0 || !checkIsNumber(workValues.price)) ? 'Veuillez entrer un prix supérieur à 1' : ''}
+            error={workValues.price ? (parseFloat(workValues.price.replaceAll(' ','')) <= 0 || !checkIsNumber(workValues.price.replaceAll(' ',''))) : false}
+            helperText={workValues.price ? ((parseFloat(workValues.price.replaceAll(' ','')) <= 0 || !checkIsNumber(workValues.price.replaceAll(' ',''))) ? 'Veuillez entrer un prix supérieur à 1' : '') : ''}
           />
           <FormControlLabel
             control={<Checkbox color="secondary" onChange={() => {

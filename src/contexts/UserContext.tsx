@@ -60,6 +60,7 @@ export const UserProvider: React.FC<any> = ({ children }) => {
       return {status: data.status, message: data.message};
     } catch (error) {
       console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue'};
     }
   };
 
@@ -72,22 +73,32 @@ export const UserProvider: React.FC<any> = ({ children }) => {
   };
 
   const registerU: TRegisterFC = async (payload: IRegisterU) => {
-    const response = await postData('register_customer', 
-    {
-      ...payload.details,
-      address: Object.values(payload.details.address).join('& '),
-      ...payload.login,
-      username: 'Username'
-    });
-    const data = await response.json();
-    return {status: data.status, message: data.message};
+    try {
+      const response = await postData('register_customer', 
+      {
+        ...payload.details,
+        address: Object.values(payload.details.address).join('& '),
+        ...payload.login,
+        username: 'Username'
+      });
+      const data = await response.json();
+      return {status: data.status, message: data.message};
+    } catch (error) {
+      console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue'};
+    }
   };
 
   const resetPasswordU: TResetPasswwordFC = async (payload: IPassword) => {
-    const response = await putData('password_customer', payload);
-    const data = await response.json();
+    try {
+      const response = await putData('password_customer', payload);
+      const data = await response.json();
 
-    return {status: data.status, message: data.message};
+      return {status: data.status, message: data.message};
+    } catch (error) {
+      console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue', data: []};
+    }
   };
 
   const logoutU: TLogoutFC = async () => {
@@ -97,9 +108,10 @@ export const UserProvider: React.FC<any> = ({ children }) => {
       const data = await response.json();
       setUser(null);
       localStorage.removeItem('user');
-      return {status: 'success', message: data.detail};
+      return {status: 'success', message: data.message};
     } catch (error) {
       console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue'};
     }
   };
   const getWorks: TGetWorksFC = async () => {
@@ -109,6 +121,7 @@ export const UserProvider: React.FC<any> = ({ children }) => {
       return {status: data.status, message: data.message, data: data.data};
     } catch (error) {
       console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue', data: []};
     }
 
   };
@@ -125,6 +138,7 @@ export const UserProvider: React.FC<any> = ({ children }) => {
       return {status: data.status, message: data.message};
     } catch (error) {
       console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue'};
     }
   };
 
@@ -143,6 +157,7 @@ export const UserProvider: React.FC<any> = ({ children }) => {
       return {status: data.status, message: data.message};
     } catch (error) {
       console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue'};
     }
   };
 
@@ -153,6 +168,7 @@ export const UserProvider: React.FC<any> = ({ children }) => {
       return {status: data.status, message: data.message, data: data.data};
     } catch (error) {
       console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue', data: []};
     }
   };
 
@@ -163,6 +179,7 @@ export const UserProvider: React.FC<any> = ({ children }) => {
       return {status: data.status};
     } catch (error) {
       console.log(error)
+      return {status: 'error'};
     }
   };
 
