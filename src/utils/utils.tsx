@@ -58,7 +58,7 @@ export const checkPostalCode = (input: string) => {
 };
 
 export const checkIsNumber = (input: string) => {
-  return /^\d+$/.test(input);
+  return !isNaN(Number(input))
 };
 
 export const checkCity = (input: string) => {

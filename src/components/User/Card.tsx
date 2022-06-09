@@ -5,7 +5,7 @@ import { IPaymentValues } from "../../@types/IUser";
 import { IClient, IWork } from "../../@types/IClient";
 import { ExpandMore, Transition, stringAvatar, SmallAvatar } from "../../utils/utils";
 import { ExpandMore as ExpandMoreIcon, AddShoppingCartRounded, InfoRounded, FavoriteRounded, FavoriteBorderRounded } from "@mui/icons-material";
-import { Grid, Card, CardHeader, Avatar, IconButton, CardMedia, ImageListItem, ImageListItemBar, Typography, Collapse, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box } from "@mui/material";
+import { Grid, Card, CardHeader, Avatar, CircularProgress, IconButton, CardMedia, ImageListItem, ImageListItemBar, Typography, Collapse, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 
 interface ICardComponentProps {
   work: IWork;
@@ -26,10 +26,13 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
   const [open, setOpen] = useState(false);
   const [pop, setPop] = useState(false);
   const [popImg, setPopImg] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onLike = async () => {
+    setLoading(true);
     if (!work.sold)
       await handleLike(work.work_id!);
+    setLoading(false);
   };
 
   const handleExpandClick = () => {
@@ -126,7 +129,7 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
                     <IconButton
                     onClick={onLike}
                     sx={{ color: (work.likes?.liked && !work.sold) ? '#eb4034' :'rgba(255, 255, 255, 0.54)' }}>
-                      {work.likes?.liked ? <FavoriteRounded /> : <FavoriteBorderRounded />}
+                      {loading ? <CircularProgress color='inherit' style={{ width: 20, height: 20 }} /> : (work.likes?.liked ? <FavoriteRounded /> : <FavoriteBorderRounded />)}
                     </IconButton>
                   </Grid>
                 </Grid>
@@ -137,31 +140,31 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
         </Collapse>
       </Card>
       <Modal info={true} buttonProps='OK' title={`${client.firstname} ${client.lastname}`} description={client.description!} open={pop} setOpen={setPop}>
-        <Box padding={2} paddingTop={3}>
+        <Grid container padding={2} paddingTop={3} spacing={2} minWidth={300} sx={{ justifyItems: 'center', alignItems: 'center' }}>
           <Grid position={'absolute'} left={27} bottom={7}>
             <SmallAvatar aria-label="art" {...stringAvatar(`${client.firstname} ${client.lastname}`)} src={client.photo === 'p' ? '' : client.photo}/>
           </Grid>
-          <Grid>
+          <Grid item xs={12} sm={6}>
             <Typography fontSize={16}>Institution: </Typography>
-            <Typography sx={{ pl: 1 }}><strong>{work.artist?.institution}</strong></Typography>
+            <Typography><strong>{work.artist?.institution}</strong></Typography>
           </Grid>
-          <Grid>
+          <Grid item xs={12} sm={6}>
             <Typography fontSize={16}>Cursus: </Typography>
-            <Typography sx={{ pl: 1 }}><strong>{work.artist?.cursus}</strong></Typography>
+            <Typography><strong>{work.artist?.cursus}</strong></Typography>
           </Grid>
           {work.artist?.info && (
             <>
-              <Grid paddingTop={4}>
+              <Grid item xs={12} sm={6}>
                 <Typography fontSize={16}>Téléphone: </Typography>
-                <Typography sx={{ pl: 1 }}><strong>{work.artist?.phonenumber}</strong></Typography>
+                <Typography><strong>{work.artist?.phonenumber}</strong></Typography>
               </Grid>
-              <Grid>
+              <Grid item xs={12} sm={6}>
                 <Typography fontSize={16}>Email: </Typography>
-                <Typography sx={{ pl: 1 }}><strong>{work.artist?.email}</strong></Typography>
+                <Typography><strong>{work.artist?.email}</strong></Typography>
               </Grid>
             </>
           )}
-        </Box>
+        </Grid>
       </Modal>
       <Modal info={true} buttonProps='OK' title={work.title} description={work.description} open={popImg} setOpen={setPopImg}>
         <CardMedia
