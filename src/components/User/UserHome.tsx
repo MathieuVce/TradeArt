@@ -34,7 +34,7 @@ export const UserHome: React.FC = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', background: "linear-gradient(to top, #001763,#1972f7, #19c2fa, #64ddf5, #8cecff,#88e1fc, #e6f7ff)", minWidth: '100%', height: '100%', minHeight: '100vh'}}>
+    <Box sx={{ display: 'flex', background: "linear-gradient(to right top, #1972f7, #19c2fa, #64ddf5,#88e1fc ,#88e1fc ,#8cecff,#8cecff, #e6f7ff, #e6f7ff)", minWidth: '100%', height: '100%', minHeight: '100vh'}}>
       <CssBaseline />
       <AppBarComponent open={open} handleToggleDrawer={handleToggleDrawer} pages={pages}/>
       <DrawerComponent open={open} handleToggleDrawer={handleToggleDrawer} pages={pages} title={"Customer's Platform"}/>

@@ -3,7 +3,7 @@ import { IWork } from '../../@types/IClient';
 import { IPaymentValues } from '../../@types/IUser';
 import { UserContext } from '../../contexts/UserContext';
 import { TextField, Grid, InputAdornment, OutlinedInput, Checkbox, FormControlLabel } from "@mui/material";
-import { checkPostalCode, checkCity } from '../../utils/utils';
+import { checkPostalCode, checkCity, checkIsNumber } from '../../utils/utils';
 
 interface IPaymentFormProps {
   work: IWork;
@@ -25,11 +25,6 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
   
   useEffect(() => {
     handleChangePaymentValues('amount', work.price);
-    if (user?.credit_card_number) {
-      handleChangePaymentValues('ccnumber', user?.credit_card_number.split('&')[0]);
-      handleChangePaymentValues('ccexp', user?.credit_card_number.split('&')[1]);
-      handleChangePaymentValues('cccvc', user?.credit_card_number.split('&')[2]);
-    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -44,7 +39,9 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
           fullWidth
           inputProps={{ maxLength: 16 }}
           onChange={(e) => handleChangePaymentValues('ccnumber', e.target.value)}
-          value={user?.credit_card_number?.split('&')[0] ? user?.credit_card_number!.split('&')[0] : paymentValues.ccnumber}
+          value={paymentValues.ccnumber}
+          error={paymentValues.ccnumber ? !checkIsNumber(paymentValues.ccnumber) : false}
+          helperText={paymentValues.ccnumber ? (!checkIsNumber(paymentValues.ccnumber) ? 'Veuillez entrer un numéro valide' : '') : ''}
         />
       </Grid>
       <Grid item xs={4} sm={3}>
@@ -59,19 +56,22 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
       </Grid>
       <Grid item xs={6} sm={6}>
         <TextField
+          type={'date'}
+          InputLabelProps={{ shrink: true }}
           label="Expiration Date"
           name="ccexp"
           variant="outlined"
           required
           fullWidth
           onChange={(e) => handleChangePaymentValues('ccexp', e.target.value)}
-          value={user?.credit_card_number?.split('&')[1] ? user?.credit_card_number!.split('&')[1] : paymentValues.ccexp}
-
+          value={paymentValues.ccexp}
+          error={paymentValues.ccexp ? (new Date(paymentValues.ccexp).getDate() < new Date().getDate() ? true : false) : false}
+          helperText={paymentValues.ccexp ? (new Date(paymentValues.ccexp).getDate() < new Date().getDate() ? 'Veuillez entrer une date valide' : '') : ''}
         />
       </Grid>
       <Grid item xs={6} sm={6}>
         <TextField
-          label="CVC"
+          label="CVV"
           name="cvc"
           variant="outlined"
           required
@@ -80,6 +80,8 @@ export const PaymentForm: React.FC<IPaymentFormProps> = ({ work, paymentValues, 
           inputProps={{ maxLength: 3 }}
           onChange={(e) => handleChangePaymentValues('cccvc', e.target.value)}
           value={paymentValues.cccvc}
+          error={paymentValues.cccvc ? !checkPostalCode(paymentValues.cccvc) : false}
+          helperText={paymentValues.cccvc ? (!checkPostalCode(paymentValues.cccvc) ? 'Le CVV doit être composé de 3 chiffres' : '') : ''}
         />
       </Grid>
       <Grid item xs={12}>

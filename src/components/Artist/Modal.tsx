@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IWork } from "../../@types/IClient";
-import { create_blob } from "../../utils/utils";
+import { checkIsNumber, create_blob } from "../../utils/utils";
 import { EuroRounded } from '@mui/icons-material';
 import { IconTextField } from "../IconTextField";
 import { Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Button, Box, Checkbox, FormControlLabel } from "@mui/material";
@@ -19,7 +19,7 @@ export const Modal: React.FC<IModalProps> = ({ open, setOpen, handleUpload }) =>
     description: '',
     evaluation: '',
     picture: '',
-    info: false
+    info: false,
   });
 
   const handleClose = () => {
@@ -102,12 +102,13 @@ export const Modal: React.FC<IModalProps> = ({ open, setOpen, handleUpload }) =>
             id="price"
             label="Prix"
             name="price"
+            inputProps={{ maxLength: 10 }}
             onChange={(e) => handleChangeWork('price', e.target.value)}
             value={workValues.price}
             sx={{ mb: 2 }}
             iconEnd={<EuroRounded/>}
-            error={parseFloat(workValues.price) <= 0}
-            helperText={parseFloat(workValues.price) <= 0 ? 'Veuillez entrer un prix supérieur à 0' : ''}
+            error={parseFloat(workValues.price) <= 0 || !checkIsNumber(workValues.price)}
+            helperText={(parseFloat(workValues.price) <= 0 || !checkIsNumber(workValues.price)) ? 'Veuillez entrer un prix supérieur à 1' : ''}
           />
           <FormControlLabel
             control={<Checkbox color="secondary" onChange={() => {

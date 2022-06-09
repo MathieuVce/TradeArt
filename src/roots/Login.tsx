@@ -12,8 +12,8 @@ import { VisibilityRounded, VisibilityOffRounded } from '@mui/icons-material';
 const Login: React.FunctionComponent = () => {
   const [visible, setVisible] = useState(false);
   const [authValues, setAuthValues] = useState<IAuth>({
-    email: 'oamakhma@gmail.com',
-    password: 'Azer123',
+    email: '',
+    password: '',
   });
 
   const handleChangeAuth = (prop: keyof typeof authValues, value: string | boolean) => {
@@ -34,8 +34,8 @@ const Login: React.FunctionComponent = () => {
         name="email"
         autoComplete="email"
         autoFocus
-        error={!checkEmail(authValues.email)}
-        helperText={!checkEmail(authValues.email) ? "Veuillez suivre le format d'email: exemple@exemple.com" : ''}
+        error={authValues.email ? !checkEmail(authValues.email) : false}
+        helperText={authValues.email ? (!checkEmail(authValues.email) ? "Veuillez suivre le format d'email: exemple@exemple.com" : '') : ''}
         onChange={(e) => handleChangeAuth('email', e.target.value)}
       />
       <IconTextField

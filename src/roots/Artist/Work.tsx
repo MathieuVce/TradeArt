@@ -6,7 +6,7 @@ import { AlertContext } from "../../contexts/AlertContext";
 import { ClientContext } from "../../contexts/ClientContext";
 import { CardComponent } from "../../components/Artist/Card";
 import { OpenInFullRounded, CloseFullscreenRounded } from '@mui/icons-material';
-import { Grid, Typography, Link, Button, FormControlLabel, Switch, Box, CircularProgress } from "@mui/material";
+import { Grid, Typography, Link, Button,CardHeader, Skeleton, Card, FormControlLabel, Switch, Box } from "@mui/material";
 
 const ArtistWork: React.FunctionComponent = () => {
   const { client, getWork, createWork, deleteWork } = useContext(ClientContext);
@@ -16,7 +16,6 @@ const ArtistWork: React.FunctionComponent = () => {
   const [works, setWorks] = useState<IWork[]>();
   const [loading, setLoading] = useState(true);
 
-
   const handleOpen = () => {
     setOpen(!open);
   };
@@ -25,18 +24,24 @@ const ArtistWork: React.FunctionComponent = () => {
     const response: IResponse = await getWork();
     if (response.data?.length === 0) {
       Alerts[response.status]({message: response.message});
-      setWorks(response.data);
     } else {
       const promiseArray = response.data.map((work: any[]) => {
+        const likeArr = work[1].map((work: any[]) => (
+          work[0]
+        ));
         return {
-          work_id: parseInt(work[0]),
-          title: work[1],
-          price: parseFloat(work[2]),
-          description: work[3],
-          evaluation: work[4],
-          picture: work[5],
-          sold: work[6] === 0 ? false : true,
-          info: work[7] === 1 ? true : false
+          work_id: parseInt(work[0][0]),
+          title: work[0][1],
+          price: parseFloat(work[0][2]),
+          description: work[0][3],
+          evaluation: work[0][4],
+          picture: work[0][5],
+          sold: work[0][6] === 0 ? false : true,
+          info: work[0][7] === 1 ? true : false,
+          likes: {
+            len: work[1].length,
+            liked: work[1].length !== 0 ? likeArr.includes(client?.artist_id!) : false
+          }
         }
       });
       const data: IWork[] = await Promise.all(promiseArray);
@@ -71,7 +76,7 @@ const ArtistWork: React.FunctionComponent = () => {
 
   return (
     <>
-      <Grid container spacing={2} borderBottom={1} paddingBottom={2} borderColor='lightgrey'>
+      <Grid container spacing={2} borderBottom={1} paddingBottom={2} borderColor='#002E82'>
         <Grid item justifyContent='flex-start' sx={{ flexGrow: 1, alignSelf: 'center' }}>
           <Typography variant="h4" textAlign={'start'} color='primary' fontWeight={600}>
             {works?.length ? (works?.length! === 1 ? `${works?.length} ŒUVRE` : `${works?.length} ŒUVRES`) : ""}
@@ -93,16 +98,31 @@ const ArtistWork: React.FunctionComponent = () => {
           </Button>
         </Grid>
       </Grid>
-      {loading ? (
-        <Grid
-          container
-          spacing={0}
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
-          style={{ minHeight: '60vh' }}
-        >
-          <CircularProgress color="secondary" />
+      {loading ? (   
+        <Grid container justifyContent="space-evenly" alignItems="baseline" sx={{ marginTop: 3 }} spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 4, sm: 6, md: 12 }}>
+          {Array.from(new Array(9)).map((_, i) => (
+            <Grid item xs={12} sm={6} md={4}>
+              <Card sx={{ mt: 2, boxShadow: 3 }}>
+                <CardHeader
+                  avatar={
+                    <Skeleton animation="wave" variant="circular" width={50} height={50} />
+                  }
+                  title={
+                    <Skeleton
+                      animation="wave"
+                      height={20}
+                      width="80%"
+                      style={{ marginBottom: 6 }}
+                    />
+                  }
+                  subheader={
+                    <Skeleton animation="wave" height={10} width="40%" />
+                  }
+                />
+                <Skeleton sx={{ height: 190 }} animation="wave" variant="rectangular" />
+              </Card>
+            </Grid>
+          ))}
         </Grid>
       ) : (
         <>

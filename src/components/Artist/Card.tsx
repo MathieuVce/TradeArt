@@ -2,10 +2,8 @@ import { Modal } from "../Modal";
 import { useState } from "react";
 import { IClient, IWork } from "../../@types/IClient";
 import { ExpandMore, Transition, stringAvatar } from "../../utils/utils";
-import { ExpandMore as ExpandMoreIcon, CloseRounded } from "@mui/icons-material";
-import { Grid, Card, CardHeader, Avatar, IconButton, CardMedia, Typography, Collapse, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
+import { ExpandMore as ExpandMoreIcon, CloseRounded, FavoriteRounded } from "@mui/icons-material";
+import { Grid, Card, CardHeader, Avatar, IconButton, CardMedia, Typography, ImageListItemBar, ImageListItem, Collapse, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 
 interface ICardComponentProps {
   work: IWork;
@@ -15,7 +13,8 @@ interface ICardComponentProps {
 }
 
 export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleDelete, client, isExpanding }) => {
-  const colors = ['#10c8d5', '#3399ff','#cc99ff', "#8585ad", "#b4b4e4", "#80d4ff"];
+  const col = ['#6666ff','#cc80ff', '#9d95ed'];
+  const colors = col[Math.floor(Math.random() * col.length)];
   // const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
   // const randomColor = stringToColor(work.title);
@@ -50,16 +49,14 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleDelet
                   <ExpandMoreIcon style={{ color: color }} />
                 </ExpandMore>
               )}
-              {!work.sold && (
-                <IconButton aria-label="settings" onClick={handleOpenClick}>
-                  <CloseRounded style={{ color: color }} />
-                </IconButton>
-              )}
+              <IconButton aria-label="settings" onClick={handleOpenClick}>
+                <CloseRounded style={{ color: color }} />
+              </IconButton>
             </Grid>
           }
           title={<Typography variant="body1">{work.title}</Typography>}
           subheader={<Typography variant="caption">{work.sold ? 'Vendu' : 'En vente'}</Typography>}
-          style={{ backgroundColor: work.sold ? 'grey' : (colors[work.work_id!%colors.length]), color: color }}
+          style={{ backgroundColor: work.sold ? 'grey' : (colors), color: color }}
         /> 
         <Collapse in={isExpanding ? expanded : true} timeout="auto" unmountOnExit>
           <ImageListItem sx={{ maxHeight: 250, marginBottom: -1 }}>
@@ -82,7 +79,17 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleDelet
                   {work.info ? 'Informations partagées' : 'Informations non partagées'}
                 </Typography>
               </>
-              }>
+              }
+              actionIcon={
+                <Grid container flexDirection={'row'} alignItems={'center'} paddingRight={1}
+                sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
+                  <Typography pr={1}>
+                    {work.likes?.len !== 0 ? work.likes?.len! : 0}
+                  </Typography>
+                  {<FavoriteRounded sx={{ color: !work.sold ? '#eb4034' : 'rgba(255, 255, 255, 0.54)' }}/>}
+                </Grid>
+              }
+              >
             </ImageListItemBar>
           </ImageListItem>
         </Collapse>

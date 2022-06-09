@@ -1,3 +1,5 @@
+import React from "react";
+import { formatDate } from "../../utils/utils";
 import { IPaymentValues } from "../../@types/IUser";
 import { IResponse, IWork } from "../../@types/IClient";
 import { useContext, useEffect, useState } from "react";
@@ -5,22 +7,21 @@ import { UserContext } from "../../contexts/UserContext";
 import { AlertContext } from "../../contexts/AlertContext";
 import { CardComponent } from "../../components/User/Card";
 import { OpenInFullRounded, CloseFullscreenRounded } from '@mui/icons-material';
-import { Grid, Typography, FormControlLabel, Switch, Box, CircularProgress, Skeleton, Card, CardContent, CardHeader } from "@mui/material";
-import React from "react";
+import { Grid, Typography, FormControlLabel, Switch, Box, Skeleton, Card, CardHeader } from "@mui/material";
 
 
 const UserWorks: React.FunctionComponent = () => {
   const { Alerts } = useContext(AlertContext);
-  const { getWorks, user, createOrder } = useContext(UserContext);
+  const { getWorks, user, createOrder, likeWork } = useContext(UserContext);
   const [expand, setExpand] = useState(true);
   const [works, setWorks] = useState<IWork[]>();
   const [loading, setLoading] = useState(true);
 
   const [paymentValues, setPaymentValues] = useState<IPaymentValues>({
     amount: 0,
-    ccnumber: "",
-    ccexp: "",
-    cccvc: "",
+    ccnumber: user?.credit_card_number ? user?.credit_card_number!.split('&')[0] : '',
+    ccexp: user?.credit_card_number ?formatDate(new Date(user?.credit_card_number!.split('&')[1])) as unknown as Date : new Date(),
+    cccvc:user?.credit_card_number ? user?.credit_card_number!.split('&')[2] : '',
     address: user?.address!,
     save: false
   });
@@ -32,26 +33,33 @@ const UserWorks: React.FunctionComponent = () => {
     } else {
       const promiseArray = response.data.map((work: any[]) => {
         const artist = {
-          artist_id: parseInt(work[8]),
-          email: work[15],
-          lastname: work[11],
-          firstname: work[10],
-          phonenumber: work[16],
-          institution: work[17],
-          cursus: work[18],
-          description: work[19],
-          photo: work[20],
-          info: work[7] === 0 ? false : true
+          artist_id: parseInt(work[0][9]),
+          email: work[0][16],
+          lastname: work[0][12],
+          firstname: work[0][11],
+          phonenumber: work[0][17],
+          institution: work[0][18],
+          cursus: work[0][19],
+          description: work[0][20],
+          photo: work[0][21],
+          info: work[0][7] === 0 ? false : true
         }
+        const likeArr = work[1].map((work: any[]) => (
+          work[0]
+        ));
         return {
-          work_id: parseInt(work[0]),
-          title: work[1],
-          price: parseFloat(work[2]),
-          description: work[3],
-          evaluation: work[4],
-          picture: work[5],
-          sold: work[6] === 0 ? false : true,
-          artist
+          work_id: parseInt(work[0][0]),
+          title: work[0][1],
+          price: parseFloat(work[0][2]),
+          description: work[0][3],
+          evaluation: work[0][4],
+          picture: work[0][5],
+          sold: work[0][6] === 0 ? false : true,
+          artist,
+          likes: {
+            len: work[1].length,
+            liked: work[1].length !== 0 ? likeArr.includes(user?.customer_id!) : false
+          }
         }
       });
       const data: IWork[] = await Promise.all(promiseArray);
@@ -59,10 +67,20 @@ const UserWorks: React.FunctionComponent = () => {
     }
   };
 
+  const handleLike = async (work_id: number) => {
+    const response: IResponse = await likeWork({
+      work_id,
+      customer_id: user?.customer_id!
+    });
+    if (response.status === 'success') {
+      await getWorkData();
+    }
+  };
+
   const handleBuy = async (work_id: number) => {
     setLoading(true);
     const response: IResponse = await createOrder({
-      credit_card_number: user?.credit_card_number ? `${user?.credit_card_number.split('&')[0]}&${user?.credit_card_number.split('&')[1]}&${user?.credit_card_number.split('&')[2]}` : `${paymentValues.ccnumber}&${paymentValues.ccexp}&${paymentValues.cccvc}`,
+      credit_card_number: `${paymentValues.ccnumber}&${paymentValues.ccexp}&${paymentValues.cccvc}`,
       work_id,
       customer_id: user?.customer_id!,
       orderlocation: Object.values(paymentValues.address).join('&'),
@@ -101,22 +119,8 @@ const UserWorks: React.FunctionComponent = () => {
           </Box>
         </Grid>
       </Grid>
-      {loading ? (
-        
+      {loading ? (   
         <Grid container justifyContent="space-evenly" alignItems="baseline" sx={{ marginTop: 3 }} spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 4, sm: 6, md: 12 }}>
-        {/* <Grid
-          container
-          spacing={0}
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
-          style={{ minHeight: '60vh' }}
-        >
-          <CircularProgress color="secondary" />
-          <Typography variant="h6" textAlign={'center'} color='primary' fontWeight={600}>
-            Chargement des œuvres
-          </Typography>
-        </Grid> */}
           {Array.from(new Array(9)).map((_, i) => (
             <Grid item xs={12} sm={6} md={4}>
               <Card sx={{ mt: 2, boxShadow: 3 }}>
@@ -162,7 +166,7 @@ const UserWorks: React.FunctionComponent = () => {
         ) : (
           <Grid container justifyContent="space-evenly" alignItems="baseline" sx={{ marginTop: 3 }} spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 4, sm: 6, md: 12 }}>
             {works?.map((work, i) => (
-              <CardComponent key={i} work={work} handleBuy={handleBuy} isExpanding={expand} client={work.artist!} paymentValues={paymentValues} setPaymentValues={setPaymentValues}/>
+              <CardComponent key={i} work={work} handleBuy={handleBuy} handleLike={handleLike} isExpanding={expand} client={work.artist!} paymentValues={paymentValues} setPaymentValues={setPaymentValues}/>
             ))}
           </Grid>
         )}
