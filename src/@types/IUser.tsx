@@ -25,7 +25,7 @@ export interface IRegisterU {
 export interface IPaymentValues {
   amount: number;
   ccnumber: string;
-  ccexp: string;
+  ccexp: Date;
   cccvc: string;
   save: boolean;
   address: {
@@ -42,4 +42,9 @@ export interface ICreateOrder {
   orderlocation: string;
   price: number;
   credit_card_number: string;
-}
+};
+
+export interface ILike {
+  work_id?: number;
+  customer_id?: number;
+};

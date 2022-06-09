@@ -16,7 +16,6 @@ const UserCart: React.FunctionComponent = () => {
     const response: IResponse = await getPurchases(user?.customer_id!);
     Alerts[response.status]({message: response.message});
     if (response.status === 'success') {
-      console.log(response.data);
       const promiseArray = response.data.map(async (item: any) => {
         return {
           picture: item[5],
@@ -28,7 +27,6 @@ const UserCart: React.FunctionComponent = () => {
         }
       });
       const data: ICommand[] = await Promise.all(promiseArray);
-      console.log(data)
       setCommands(data);
     }
   };
@@ -54,6 +52,9 @@ const UserCart: React.FunctionComponent = () => {
           style={{ minHeight: '60vh' }}
         >
           <CircularProgress color="secondary" />
+          <Typography variant="h5" textAlign={'center'} color='primary' fontWeight={700}>
+            Chargement de vos achats...
+          </Typography>
         </Grid>
       ) : (
         <>
@@ -74,7 +75,7 @@ const UserCart: React.FunctionComponent = () => {
             </Grid> 
           ) : (
             <>
-              <Grid container spacing={2} borderBottom={1} paddingBottom={2} marginBottom={4} borderColor='lightgrey'>
+              <Grid container spacing={2} borderBottom={1} paddingBottom={2} marginBottom={4} borderColor='#002E82'>
                 <Grid item justifyContent='flex-start' sx={{ flexGrow: 1, alignSelf: 'center' }}>
                   <Typography variant="h4" textAlign={'start'} color='primary' fontWeight={600}>
                     {commands?.length ? (commands?.length! === 1 ? `${commands?.length} ACHAT` : `${commands?.length} ACHATS`) : ""}

@@ -4,30 +4,33 @@ import { PaymentForm } from "./Payment";
 import { IPaymentValues } from "../../@types/IUser";
 import { IClient, IWork } from "../../@types/IClient";
 import { ExpandMore, Transition, stringAvatar, SmallAvatar } from "../../utils/utils";
-import { ExpandMore as ExpandMoreIcon, AddShoppingCartRounded } from "@mui/icons-material";
-import { Grid, Card, CardHeader, Avatar, IconButton, CardMedia, Typography, Collapse, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box } from "@mui/material";
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
-import InfoIcon from '@mui/icons-material/Info';
+import { ExpandMore as ExpandMoreIcon, AddShoppingCartRounded, InfoRounded, FavoriteRounded, FavoriteBorderRounded } from "@mui/icons-material";
+import { Grid, Card, CardHeader, Avatar, IconButton, CardMedia, ImageListItem, ImageListItemBar, Typography, Collapse, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box } from "@mui/material";
 
 interface ICardComponentProps {
   work: IWork;
-  handleBuy: (work_id: number) => Promise<void>;
-  isExpanding: boolean;
   client: IClient;
+  isExpanding: boolean;
   paymentValues: IPaymentValues;
+  handleBuy: (work_id: number) => Promise<void>;
+  handleLike: (work_id: number) => Promise<void>;
   setPaymentValues: React.Dispatch<React.SetStateAction<IPaymentValues>>;
 }
 
-export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, isExpanding, paymentValues, setPaymentValues, client }) => {
-  const colors = ['#10c8d5', '#cc99ff', "#8585ad", "#b4b4e4", "#80d4ff"];
-  // const randomColor = colors[Math.floor(Math.random() * colors.length)];
+export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, handleLike, isExpanding, paymentValues, setPaymentValues, client }) => {
+  const col = ['#6666ff','#cc80ff', '#9d95ed'];
+  const colors = col[Math.floor(Math.random() * col.length)];
   // const randomColor = stringToColor(work.title);
   const color = 'white';
   const [expanded, setExpanded] = useState(false);
   const [open, setOpen] = useState(false);
   const [pop, setPop] = useState(false);
   const [popImg, setPopImg] = useState(false);
+
+  const onLike = async () => {
+    if (!work.sold)
+      await handleLike(work.work_id!);
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -70,7 +73,7 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
           }
           title={<Typography variant="body1">{work.title}</Typography>}
           subheader={<Typography variant="caption">{work.sold ? 'Vendu' : 'En vente'}</Typography>}
-          style={{ backgroundColor: work.sold ? 'grey' : (colors[work.work_id!%colors.length]), color: color }}
+          style={{ backgroundColor: work.sold ? 'grey' : (colors), color: color }}
         /> 
         <Collapse in={isExpanding ? expanded : true} timeout="auto" unmountOnExit>
           <ImageListItem sx={{ maxHeight: 250, marginBottom: -1 }}>
@@ -88,7 +91,7 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
               <>
               { work.sold ? (
                 <>
-                  <Typography variant="h4">
+                  <Typography variant="h6">
                     ARTICLE VENDU
                   </Typography>
                 </>
@@ -106,13 +109,27 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
               </>
               }
               actionIcon={
-                <IconButton
-                  onClick={() => {setPop(true)}}
-                  sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-                  aria-label={`info about ${work.artist?.firstname} ${work.artist?.lastname}`}
-                >
-                  <InfoIcon />
-                </IconButton>
+                <Grid container flexDirection={'column'}>
+                  <Grid item>
+                    <IconButton
+                      onClick={() => {setPop(true)}}
+                      sx={{ color: 'rgba(255, 255, 255, 0.54)', marginLeft: 1.3 }}
+                      aria-label={`info about ${work.artist?.firstname} ${work.artist?.lastname}`}>
+                      <InfoRounded />
+                    </IconButton>
+                  </Grid>
+                  <Grid container flexDirection={'row'} alignItems={'center'}
+                  sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
+                    <Typography>
+                      {work.likes?.len !== 0 ? work.likes?.len! : 0}
+                    </Typography>
+                    <IconButton
+                    onClick={onLike}
+                    sx={{ color: (work.likes?.liked && !work.sold) ? '#eb4034' :'rgba(255, 255, 255, 0.54)' }}>
+                      {work.likes?.liked ? <FavoriteRounded /> : <FavoriteBorderRounded />}
+                    </IconButton>
+                  </Grid>
+                </Grid>
               }
             >
             </ImageListItemBar>
@@ -121,7 +138,7 @@ export const CardComponent: React.FC<ICardComponentProps> = ({ work, handleBuy, 
       </Card>
       <Modal info={true} buttonProps='OK' title={`${client.firstname} ${client.lastname}`} description={client.description!} open={pop} setOpen={setPop}>
         <Box padding={2} paddingTop={3}>
-          <Grid position={'absolute'} right={10} top={15}>
+          <Grid position={'absolute'} left={27} bottom={7}>
             <SmallAvatar aria-label="art" {...stringAvatar(`${client.firstname} ${client.lastname}`)} src={client.photo === 'p' ? '' : client.photo}/>
           </Grid>
           <Grid>

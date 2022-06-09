@@ -57,6 +57,10 @@ export interface IWork {
   sold?: boolean;
   artist?: IClient;
   info: boolean;
+  likes?: {
+    liked: boolean;
+    len: number;
+  }
 }
 
 export interface ICommand{
@@ -66,4 +70,4 @@ export interface ICommand{
   description: string;
   order_date: Date;
   order_location: string;
-}
+};

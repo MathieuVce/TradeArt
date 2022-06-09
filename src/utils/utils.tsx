@@ -35,7 +35,8 @@ export const checkEmail = (input: string) => {
 export const checkPassword = (input: string) => {
   // eslint-disable-next-line no-useless-escape
   return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/.test(input);
-}
+};
+
 export const checkBirthDate = (input: Date) => {
     const today = new Date();
     const dateNaissance = new Date(input);
@@ -54,6 +55,10 @@ export const checkBank = (input: string | undefined) => {
 
 export const checkPostalCode = (input: string) => {
   return !isNaN(Number(input))
+};
+
+export const checkIsNumber = (input: string) => {
+  return /^\d+$/.test(input);
 };
 
 export const checkCity = (input: string) => {

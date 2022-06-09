@@ -47,9 +47,11 @@ export const AppBarComponent: React.FC<IAppBarComponentProps> = ({ open, handleT
         <Typography  justifySelf={'center'} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
           {/* eslint-disable-next-line array-callback-return */}
           {Object.keys(pages).map((page, i) => {
-            <Typography key={i} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-              {location.pathname === pages[page].link ? page : ''}
-            </Typography>
+            return (
+              <Typography  key={i} variant="h6" noWrap component="div" sx={{ flexGrow: 1, color: 'black' }}>
+                {location.pathname === pages[page].link ? page : ''}
+              </Typography>
+            )
           }
           )}
         </Typography>
@@ -60,7 +62,7 @@ export const AppBarComponent: React.FC<IAppBarComponentProps> = ({ open, handleT
           src={logo}
         />
         <IconButton
-          color="inherit"
+          color="primary"
           aria-label="logout"
           onClick={handleLogout}
           edge="start"

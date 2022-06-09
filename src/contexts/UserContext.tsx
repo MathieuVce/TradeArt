@@ -1,15 +1,16 @@
-import { createContext, useState } from "react";
-import { IUser, IRegisterU, ICreateOrder } from "../@types/IUser";
-import { IAuth, IPassword } from "../@types/IClient";
-import { IUserContext, defaultUserValue, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC, TUpdateFC, TGetWorksFC, TCreateOrderFC, TGetPurchasesFC } from "../@types/IUserContext";
 import { formatDate } from "../utils/utils";
+import { createContext, useState } from "react";
+import { IAuth, IPassword } from "../@types/IClient";
+import { IUser, IRegisterU, ICreateOrder, ILike } from "../@types/IUser";
+import { IUserContext, defaultUserValue, TLoginFC, TLogoutFC, TRegisterFC, TResetPasswwordFC, TUpdateFC, TGetWorksFC, TCreateOrderFC, TGetPurchasesFC, TLikeWorkFC } from "../@types/IUserContext";
 
 export const UserContext = createContext<IUserContext>(defaultUserValue);
 
 export const UserProvider: React.FC<any> = ({ children }) => {
   const [user, setUser] = useState<null | IUser>(null);
 
-  const ip = 'https://tradeartfastapi.herokuapp.com/'
+  // const ip = 'https://tradeartfastapi.herokuapp.com/'
+  const ip = 'http://localhost:8000/'
   
   const fetchData = async (url: string) => {
     return await fetch(ip+url)
@@ -131,6 +132,14 @@ export const UserProvider: React.FC<any> = ({ children }) => {
     try {
       const response = await postData('create_order', payload);
       const data = await response.json();
+      if (data.status === 'success') {
+        if (payload.save === 1) {
+          setUser({
+            ...user!,
+            credit_card_number: payload.credit_card_number
+        });
+        }
+      }
       return {status: data.status, message: data.message};
     } catch (error) {
       console.log(error)
@@ -147,12 +156,22 @@ export const UserProvider: React.FC<any> = ({ children }) => {
     }
   };
 
+  const likeWork: TLikeWorkFC = async (payload: ILike) => {
+    try {
+      const response = await postData('like_work', payload);
+      const data = await response.json();
+      return {status: data.status};
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   return (
     <UserContext.Provider value={{
         user, autologU,
         loginU, registerU, resetPasswordU, logoutU,
-        updateU, getWorks, createOrder, getPurchases
+        updateU, getWorks, createOrder, getPurchases,
+        likeWork
     }}>
         {children}
     </UserContext.Provider>

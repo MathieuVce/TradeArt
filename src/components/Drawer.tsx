@@ -26,7 +26,7 @@ export const DrawerComponent: React.FC<IDrawerComponentProps> = ({ open, handleT
       </DrawerHeader>
       <Divider sx={{ pt: .7 }} />
       <List>
-        {Object.keys(pages).map((text, index) => (
+        {Object.keys(pages).map((text, index) => index !== 0 && (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               selected={location.pathname === pages[text].link}
