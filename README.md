@@ -37,9 +37,9 @@ npm start
 ```
 
 ```sh
-cd backend
+cd fast-api
 python3 DB_CREATION.py
-python3 API_Function.py
+python3 main.py
 ```
 
 #### Building for source
@@ -47,13 +47,24 @@ python3 API_Function.py
 Generating pre-built zip archives for distribution:
 
 ```sh
-cd frontend
-npm build
+npm run build
+```
+
+Deploy on firebase (automatic workflow on accepted PR) 
+```sh
+firebase deploy
+```
+
+Backend deploy (automatic on push in _deploy_ branch)
+```sh
+https://tradeartfastapi.herokuapp.com/
 ```
 
 Verify the deployment by navigating to your server address in
 your preferred browser.
 
 ```sh
-http://localhost:3000/
+http://localhost:3000/ or https://tradeart-4366d.firebaseapp.com/ or https://tradeart.be
 ```
+
+
