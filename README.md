@@ -1,5 +1,6 @@
 # TradeArt
-## _Online Saling Art Platform_
+## _Online Saling Art Platform_                                             
+
 
 [![Deploy to Firebase Hosting on PR](https://github.com/MathieuVce/TradeArt/actions/workflows/firebase-hosting-pull-request.yml/badge.svg?branch=deploy)](https://github.com/MathieuVce/TradeArt/actions/workflows/firebase-hosting-pull-request.yml)
 
