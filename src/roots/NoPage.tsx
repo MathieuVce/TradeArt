@@ -19,7 +19,7 @@ const NoPage: React.FunctionComponent = () => {
           justifyContent="center"
           style={{ minHeight: '100vh' }}
         >
-          <Paper elevation={3} sx={{position: 'fixed', minWidth: '50%', minHeight: '50%', paddingBottom: 8 }}>
+          <Paper elevation={3} sx={{position: 'fixed', minWidth: '50%', maxHeight: '70%', paddingBottom: 8, paddingRight: 8, paddingLeft: 8 }}>
             <img src={logo} alt='logo' style={{ width: '100%', height: '70%'}}/>
             <Typography color='primary' variant='h3' style={{ textAlign: 'center' }}>
               Oups, cette page n'existe pas !
