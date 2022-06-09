@@ -8,8 +8,8 @@ export const ClientContext = createContext<IClientContext>(defaultClientValue);
 export const ClientProvider: React.FC<any> = ({ children }) => {
   const [user, setUser] = useState<null | IClient>(null);
 
-  // const ip = 'https://tradeartfastapi.herokuapp.com/'
-  const ip = 'http://localhost:8000/'
+  const ip = 'https://tradeartfastapi.herokuapp.com/'
+  // const ip = 'http://localhost:8000/'
   
   const postData = async (url: string, data: any) => {
     const requestOptions = {
@@ -59,6 +59,7 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
       return {status: data.status, message: data.message};
     } catch (error) {
       console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue'};
     }
   };
 
@@ -71,22 +72,32 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
   };
 
   const register: TRegisterFC = async (payload: IRegister) => {
-    const response = await postData('register_artist', 
-    {
-      ...payload.details,
-      address: Object.values(payload.details.address).join('& '),
-      ...payload.login,
-      username: 'Username'
-    });
-    const data = await response.json();
-    return {status: data.status, message: data.message};
+    try {
+      const response = await postData('register_artist', 
+      {
+        ...payload.details,
+        address: Object.values(payload.details.address).join('& '),
+        ...payload.login,
+        username: 'Username'
+      });
+      const data = await response.json();
+      return {status: data.status, message: data.message};
+    } catch (error) {
+      console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue'};
+    }
   };
 
   const resetPassword: TResetPasswwordFC = async (payload: IPassword) => {
-    const response = await putData('password_artist', payload);
-    const data = await response.json();
+    try {
+      const response = await putData('password_artist', payload);
+      const data = await response.json();
 
-    return {status: data.status, message: data.message};
+      return {status: data.status, message: data.message};
+    } catch (error) {
+      console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue'};
+    }
   };
 
   const logout: TLogoutFC = async () => {
@@ -99,6 +110,7 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
       return {status: data.status, message: data.message};
     } catch (error) {
       console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue'};
     }
   };
 
@@ -113,25 +125,41 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
       return {status: data.status, message: data.message};
     } catch (error) {
       console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue'};
     }
   };
 
   const createWork: TCreateWorkFC = async (payload: IWork) => {
-    const response = await postData('register_work', {...payload, email: user?.email, artist_id: user?.artist_id, price: parseFloat(payload.price), info: payload.info ? 1 : 0});
-    const data = await response.json();
-    return {status: data.status, message: data.message, data: data.data};
+    try {
+      const response = await postData('register_work', {...payload, email: user?.email, artist_id: user?.artist_id, price: parseFloat(payload.price), info: payload.info ? 1 : 0});
+      const data = await response.json();
+      return {status: data.status, message: data.message, data: data.data};
+    } catch (error) {
+      console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue', data: []};
+    }
   };
 
   const getWork: TGetWorkFC = async () => {
+    try {
       const response = await postData('check_yourwork', {artist_id: user?.artist_id});
       const data = await response.json();
       return {status: data.status, message: data.message, data: data.data};
+    } catch (error) {
+      console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue', data: []};
+    }
   };
 
   const deleteWork: TDeleteWorkFC = async (payload: {work_id: number}) => {
-    const response = await postData('delete_work', payload);
-    const data = await response.json();
-    return {status: data.status, message: data.message, data: data.data};
+    try {
+      const response = await postData('delete_work', payload);
+      const data = await response.json();
+      return {status: data.status, message: data.message, data: data.data};
+    } catch (error) {
+      console.log(error)
+      return {status: 'error', message: 'Une erreur est survenue', data: []};
+    }
   };
 
   const receivePayment: TReceivePaymentFC = async (artist_id: number) => {
@@ -143,7 +171,6 @@ export const ClientProvider: React.FC<any> = ({ children }) => {
     } catch (error) {
       console.log(error)
       return {status:'error', message: 'Une erreur est survenue.'};
-
     }
   };
 
